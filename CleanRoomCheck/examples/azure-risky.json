@@ -1,0 +1,442 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "fictional-company",
+    "name": "架空金融グループ / クリーン環境検討",
+    "demo": true,
+    "description": "公開デモ用の架空構成。実顧客の環境や製品の導入実績ではない。"
+  },
+  "evidence": [
+    {
+      "id": "cfg",
+      "type": "configuration",
+      "collected_at": "2026-10-14",
+      "reference": "仮定: 設計レビュー資料 rev1（実設定の取得ではない）",
+      "note": "デモのためconfigurationとして登録。実設定を取得した証跡ではない。"
+    },
+    {
+      "id": "test",
+      "type": "tested",
+      "collected_at": "2026-10-14",
+      "reference": "仮定: 試験記録の記入例（実機試験は未実施）",
+      "note": "デモスキーマ説明用。実施済み試験として顧客に提示しない。"
+    },
+    {
+      "id": "say",
+      "type": "self_reported",
+      "collected_at": "2026-10-14",
+      "reference": "Synthetic interview"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prod-tenant",
+      "label": "本番ID",
+      "kind": "tenant",
+      "provider": "azure",
+      "plane": "production",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "rec-tenant",
+      "label": "復旧ID",
+      "kind": "tenant",
+      "provider": "azure",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "prod-sub",
+      "label": "本番Sub",
+      "kind": "subscription",
+      "provider": "azure",
+      "plane": "production",
+      "tenant": "prod-tenant",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "rec-sub",
+      "label": "復旧Sub",
+      "kind": "subscription",
+      "provider": "azure",
+      "plane": "recovery",
+      "tenant": "prod-tenant",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "vault",
+      "label": "保管先",
+      "kind": "backup",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "key",
+      "label": "復号鍵",
+      "kind": "key",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "logs",
+      "label": "検証ログ",
+      "kind": "log_store",
+      "provider": "azure",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "backup-admin",
+      "label": "バックアップ管理者",
+      "kind": "identity",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "shared-pipeline",
+      "label": "共通CI/CD",
+      "kind": "pipeline",
+      "provider": "azure",
+      "plane": "shared",
+      "evidence": [
+        "cfg"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-0",
+      "source": "prod-sub",
+      "target": "key",
+      "relation": "can_disable",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-1",
+      "source": "prod-sub",
+      "target": "rec-sub",
+      "relation": "network_reach",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-2",
+      "source": "backup-admin",
+      "target": "vault",
+      "relation": "controls",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-3",
+      "source": "backup-admin",
+      "target": "key",
+      "relation": "can_delete",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-4",
+      "source": "shared-pipeline",
+      "target": "rec-sub",
+      "relation": "controls",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-5",
+      "source": "shared-pipeline",
+      "target": "key",
+      "relation": "can_disable",
+      "evidence": [
+        "cfg"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "tenant-takeover",
+      "name": "本番全体管理者侵害",
+      "compromised": [
+        "prod-tenant"
+      ],
+      "azure_global_admin_tenants": [
+        "prod-tenant"
+      ]
+    },
+    {
+      "id": "backup-admin-takeover",
+      "name": "バックアップ管理者侵害",
+      "compromised": [
+        "backup-admin"
+      ]
+    },
+    {
+      "id": "pipeline-takeover",
+      "name": "共通CI/CD侵害",
+      "compromised": [
+        "shared-pipeline"
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "id": "core",
+      "name": "基幹業務",
+      "provider": "azure",
+      "workload": "azure_vm",
+      "production_node": "prod-sub",
+      "recovery_node": "rec-sub",
+      "backup_node": "vault",
+      "key_node": "key",
+      "log_node": "logs",
+      "facts": {
+        "lock_finalized": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "control_graph_complete": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "network_graph_complete": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "independent_identity": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "dedicated_admin_device": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "independent_approval": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "runbook_available": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "control_plane_exported": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "network_default_deny": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "egress_allowlist": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "immutable_applies_to_points": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "recovery_point_exists": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "recovery_point_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "independent_backup_approval": {
+          "value": false,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "key_usable": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_supported": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "restore_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_data_covered": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_identity_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_config_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_domain_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "quarantine_separate": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "malware_scan_recorded": {
+          "value": null,
+          "evidence": []
+        },
+        "configuration_diff_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "permissions_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "secrets_rotated": {
+          "value": null,
+          "evidence": []
+        },
+        "log_immutable": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "log_capture_verified": {
+          "value": null,
+          "evidence": []
+        },
+        "release_approval": {
+          "value": null,
+          "evidence": []
+        },
+        "application_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "external_dependencies_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "immutable_mode": {
+          "value": "azure_unlocked",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "protection_until": {
+          "value": "2027-01-31",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "retention_days": {
+          "value": 10,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "required_retention_days": {
+          "value": 90,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "key_management": {
+          "value": "customer",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "restore_method": {
+          "value": "azure_vm_native",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "rto_hours": {
+          "value": 8,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "measured_rto_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "rpo_hours": {
+          "value": 24,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "measured_data_loss_hours": {
+          "value": null,
+          "evidence": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "MS-AZURE-ELEVATE",
+    "publisher": "Microsoft",
+    "title": "Elevate access to manage all Azure subscriptions and management groups",
+    "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin",
+    "verified_on": "2026-10-14",
+    "scope_note": "Entra IDの全体管理者によるルートスコープへの昇格と同一テナント内のAzure RBACへの影響。"
+  },
+  {
+    "id": "MS-MUA",
+    "publisher": "Microsoft",
+    "title": "Multi-user authorization using Resource Guard",
+    "url": "https://learn.microsoft.com/en-us/azure/backup/multi-user-authorization",
+    "verified_on": "2026-10-14",
+    "scope_note": "Resource Guardによる重要操作の承認と管理権限分離。"
+  },
+  {
+    "id": "MS-IMMUTABLE",
+    "publisher": "Microsoft",
+    "title": "Immutable vault for Azure Backup",
+    "url": "https://learn.microsoft.com/en-us/azure/backup/backup-azure-immutable-vault-concept",
+    "verified_on": "2026-10-14",
+    "scope_note": "EnabledとEnabled and lockedの差、保護期間と保管期間の違い。"
+  },
+  {
+    "id": "MS-VM-RESTORE",
+    "publisher": "Microsoft",
+    "title": "Support matrix for Azure VM backups",
+    "url": "https://learn.microsoft.com/en-us/azure/backup/backup-support-matrix-iaas",
+    "verified_on": "2026-10-14",
+    "scope_note": "標準Azure VM Cross Subscription Restoreの同一テナント条件と各種制約。"
+  },
+  {
+    "id": "AWS-OBJECT-LOCK",
+    "publisher": "AWS",
+    "title": "Locking objects with Object Lock",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
+    "verified_on": "2026-10-14",
+    "scope_note": "Governance/Complianceの違いとオブジェクト版の保持。"
+  },
+  {
+    "id": "AWS-KEY-CAVEAT",
+    "publisher": "AWS",
+    "title": "Object Lock considerations",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock-managing.html",
+    "verified_on": "2026-10-14",
+    "scope_note": "Object Lockだけでは暗号鍵へのアクセス喪失・削除を保護しない。"
+  },
+  {
+    "id": "AWS-VAULT-LOCK",
+    "publisher": "AWS",
+    "title": "AWS Backup Vault Lock",
+    "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html",
+    "verified_on": "2026-10-14",
+    "scope_note": "Vault Lockのモードと猶予期間を含む保護の考え方。"
+  },
+  {
+    "id": "AWS-AIRGAP",
+    "publisher": "AWS",
+    "title": "Logically air-gapped vault",
+    "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/logicallyairgappedvault.html",
+    "verified_on": "2026-10-14",
+    "scope_note": "別アカウントによる復旧経路、承認/共有と対象機能の確認。"
+  },
+  {
+    "id": "MS-M365-BACKUP",
+    "publisher": "Microsoft",
+    "title": "Overview of Microsoft 365 Backup",
+    "url": "https://learn.microsoft.com/en-us/microsoft-365/backup/backup-overview?view=o365-worldwide",
+    "verified_on": "2026-10-14",
+    "scope_note": "M365業務データ保護の説明。これをテナント全構成の再構築とは同一視しない。"
+  },
+  {
+    "id": "MANDIANT-IRE",
+    "publisher": "Google Cloud / Mandiant",
+    "title": "Isolated Recovery Environments: A Critical Layer in Modern Cyber Resilience",
+    "url": "https://cloud.google.com/blog/topics/threat-intelligence/isolated-recovery-environments-modern-cyber-resilience",
+    "verified_on": "2026-10-14",
+    "scope_note": "独立した管理基盤、隔離された検証区画と復旧用区画の設計指針。"
+  }
+]

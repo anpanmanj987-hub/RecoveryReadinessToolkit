@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BreakGlassMap: identity, PAM and runbook recovery dependencies, modeled locally. No credentials, no network calls.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-n3hIPzAPsiFaj/yvudRrDIYwAqJGKbPmcdofxXk6vUo='; style-src 'sha256-cztMbxeUymf3wcPck9gnp/7ZdOX81tu1Qz8y+nbHyqk='; img-src data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>BreakGlassMap — Recovery Readiness</title>
+<style>:root{color-scheme:light;--bg:#f3f6f5;--panel:#fff;--ink:#203730;--muted:#65776f;--line:#dfe8e3;--green:#197453;--green-soft:#e7f3eb;--red:#b54a42;--red-soft:#fcf0ed;--amber:#91650e;--amber-soft:#faf3df;--shadow:0 6px 20px #29443a05}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;color:var(--ink);font-size:13px;line-height:1.6}button,input,select,textarea{font:inherit}button,summary{cursor:pointer}button{color:inherit}button:disabled{cursor:not-allowed;opacity:.5}button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid #258560;outline-offset:3px}a{color:var(--green)}.shell{display:grid;grid-template-columns:222px minmax(0,1fr);min-height:100vh}.sidebar{background:#fafcfb;border-right:1px solid var(--line);padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:11px;font-size:18px;font-weight:750;letter-spacing:-.8px}.brand-mark{display:grid;place-items:center;background:var(--green);color:#fff;width:37px;height:40px;border-radius:11px}.brand-sub{font-size:9px;color:var(--muted);letter-spacing:1.65px;font-weight:600;white-space:nowrap}.workspace-label{font-size:10px;letter-spacing:1.8px;color:#91a399;font-weight:700;margin:0 12px 12px}nav{display:grid;gap:8px}.nav-item{border:0;background:none;border-radius:8px;text-align:left;padding:12px;display:flex;gap:12px;align-items:center;color:var(--muted);width:100%;font-weight:600}.nav-item.active{background:#e8f1eb;color:#175e46}.nav-item .nav-num{font-size:10px;opacity:.6;font-variant-numeric:tabular-nums}.nav-item:hover{background:#edf3ef}.sidebar-note{border:1px solid var(--line);border-radius:10px;padding:14px;font-size:11px;color:var(--muted);margin-top:auto;background:white}.sidebar-note strong{font-size:12px;color:var(--ink);display:block;margin:8px 0 5px}.sidebar-footer{font-size:10px;color:var(--muted);display:flex;justify-content:space-between}.main{min-width:0;padding:0 32px 36px}.topbar{height:84px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line)}.breadcrumb{font-size:10px;letter-spacing:1.65px;color:var(--muted);font-weight:600}.top-actions{display:flex;gap:8px;align-items:center}.button{border:1px solid #d7e2db;background:white;border-radius:7px;padding:8px 12px;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:12px;text-decoration:none;white-space:nowrap}.button:hover{background:#f0f6f2;border-color:#b5c9bd}.button.primary{background:var(--green);border-color:var(--green);color:white}.button.primary:hover{background:#145f43}.button.danger{color:var(--red);border-color:#edc9c3}.button.ghost{background:transparent;border-color:transparent}.button.small{padding:5px 9px;font-size:11px}.icon{display:inline-block;vertical-align:middle;flex-shrink:0}.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid #dae6de;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--green);white-space:nowrap}.pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}.page-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:29px 0 22px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--green);margin:0 0 9px}h1{font-size:27px;line-height:1.4;letter-spacing:-.7px;font-weight:750;margin:0 0 9px}h2{font-size:16px;letter-spacing:-.2px;margin:0}h3{font-size:13px;margin:0 0 9px}p{margin:0 0 12px}.muted{color:var(--muted)}.subcopy{font-size:12px;color:var(--muted);margin:0;max-width:760px}.head-note{padding-top:9px;font-size:10px;text-align:right;color:var(--muted);min-width:130px}.head-note strong{display:block;color:var(--ink);font-size:11px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);min-width:0}.scenario-bar{padding:17px 20px;display:flex;gap:20px;align-items:end}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field>label,.field-label{font-size:10px;color:var(--muted);font-weight:650;letter-spacing:.4px}.scenario-field{flex:1;max-width:360px}.date-field{width:150px}.scenario-bar .scenario-description{flex:1;align-self:center;font-size:11px;color:var(--muted)}input:not([type=checkbox]),select,textarea{width:100%;background:#fff;color:var(--ink);border:1px solid #d9e2dc;border-radius:6px;padding:9px 10px;min-height:38px}input[readonly]{background:#f3f6f4;color:var(--muted)}input[type=checkbox]{accent-color:var(--green);width:15px;height:15px;flex-shrink:0}textarea{resize:vertical;min-height:88px;line-height:1.6}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:17px 0}.metric{padding:17px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}.metric-label{font-size:11px;font-weight:650;color:var(--muted)}.metric-value{font-size:34px;font-weight:650;letter-spacing:-1.5px;line-height:1.3;font-variant-numeric:tabular-nums}.metric-note{font-size:10px;color:var(--muted)}.metric-icon{border-radius:10px;padding:12px;background:#f2f5f3}.metric.ready .metric-value,.ready-text{color:var(--green)}.metric.ready .metric-icon{background:var(--green-soft);color:var(--green)}.metric.blocked .metric-value,.blocked-text{color:var(--red)}.metric.blocked .metric-icon{background:var(--red-soft);color:var(--red)}.metric.unknown .metric-value,.unknown-text{color:var(--amber)}.metric.unknown .metric-icon{background:var(--amber-soft);color:var(--amber)}.insight{padding:17px 20px;background:#eef4ef;border-color:#dbe7dc;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px}.insight-title{font-size:13px;font-weight:700;margin-bottom:4px}.insight p{font-size:11px;margin:0;color:var(--muted)}.analysis-grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(300px,1fr);gap:18px;align-items:start}.panel-heading{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.panel-heading p{font-size:10px;color:var(--muted);margin:4px 0 0}.legend{display:flex;gap:11px;font-size:9px;color:var(--muted);white-space:nowrap}.legend span{display:flex;gap:5px;align-items:center}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#78887e}.dot.ready{background:var(--green)}.dot.blocked{background:var(--red)}.dot.unknown{background:#b69136}.graph-wrap{overflow:auto;max-height:620px;background-color:#fcfdfc;background-image:radial-gradient(#cfdcd5 .6px,transparent .6px);background-size:17px 17px;border-radius:0 0 10px 10px}.graph{display:block;width:100%;min-width:0;min-height:450px}.graph-lane{font:600 10px system-ui,sans-serif;fill:#91a198;letter-spacing:1.6px}.graph-edge{fill:none;stroke:#bdccc3;stroke-width:1.4;opacity:.7}.graph-edge.is-blocked{stroke:#d9b5ac;stroke-dasharray:4 4}.graph-node{cursor:pointer}.graph-node rect{fill:#fff;stroke:#dbe6df;stroke-width:1.1}.graph-node.selected rect{stroke:#276d51;stroke-width:2.5}.graph-node .node-title{font-size:11px;font-family:inherit;font-weight:600;fill:#29483a}.graph-node .node-meta{font-size:8px;fill:#7b8c82}.graph-node .node-state.ready{fill:#21845c}.graph-node .node-state.blocked{fill:#c06859}.graph-node .node-state.unknown{fill:#bd9a49}.graph-node:hover rect{fill:#f2f7f3;stroke:#7a9f87}.graph-note{font-size:10px;color:var(--muted);padding:11px 17px;border-top:1px solid var(--line);background:#fbfcfb;border-radius:0 0 11px 11px}.stack{display:grid;gap:17px}.goals{padding:8px}.goal-card{width:100%;border:1px solid transparent;border-radius:7px;background:transparent;text-align:left;padding:13px 12px;display:block}.goal-card+.goal-card{border-top-color:#edf1ee;border-radius:0}.goal-card:hover,.goal-card.selected{background:#f3f7f3}.goal-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}.goal-name{font-size:12px;font-weight:650}.badge{font-size:9px;font-weight:650;padding:3px 6px;border-radius:4px;display:inline-block;white-space:nowrap;background:#edf1ee;color:#597166}.badge.ready{background:var(--green-soft);color:var(--green)}.badge.blocked,.badge.failed{background:var(--red-soft);color:var(--red)}.badge.unknown,.badge.stale,.badge.future,.badge.scope-mismatch,.badge.unbound,.badge.conditions-changed{background:var(--amber-soft);color:var(--amber)}.goal-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);gap:8px}.inspector{padding:17px}.inspector-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;gap:8px}.inspector h3{font-size:13px;margin:0}.metadata{font-size:10px;color:var(--muted);margin:9px 0 15px}.route-card{background:#f7f9f7;border:1px solid #e4ebe6;border-radius:7px;padding:10px;margin-top:9px}.route-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;font-weight:650}.expr{list-style:none;margin:6px 0 0;padding:0 0 0 10px;border-left:1px solid #d8e3dc}.expr .operator{font-size:9px;color:var(--muted);margin-bottom:4px;display:block}.dep{display:flex;gap:6px;align-items:center;background:none;border:0;text-align:left;padding:3px 0;font-size:10px;color:#4b6356;max-width:100%}.dep span:last-child{overflow-wrap:anywhere}.dependency-limit{font-size:10px;color:var(--amber)}.empty-note{font-size:11px;color:var(--muted);padding:16px;background:#f7f9f7;border-radius:8px}.comparison{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;margin:0 0 18px;padding:12px 16px;border:1px dashed #92b89c;border-radius:8px;background:#f8fcf7}.comparison strong{font-size:12px;color:var(--green)}.cycle-note{margin-top:12px;padding:10px;border-radius:7px;background:#fcf2ef;font-size:10px;color:#915449}.footnote{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-top:23px;font-size:10px;color:var(--muted)}.footnote .privacy{display:flex;align-items:center;gap:8px;max-width:365px;flex-wrap:wrap}.privacy label{display:flex;align-items:center;gap:5px;cursor:pointer}.footnote .disclaimer{max-width:650px}.menu{position:relative}.menu summary{list-style:none}.menu summary::-webkit-details-marker{display:none}.menu-options{position:absolute;right:0;top:42px;z-index:5;background:white;border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 24px #23392e20;min-width:190px;padding:5px;display:grid;gap:3px}.menu-options button{justify-content:flex-start;text-align:left}.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.toolbar .group{display:flex;gap:8px;flex-wrap:wrap}.table-wrap{overflow-x:auto}.data-table{border-collapse:collapse;width:100%;text-align:left;font-size:11px}.data-table th{padding:12px 16px;background:#f7f9f7;font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap}.data-table td{padding:14px 16px;border-top:1px solid var(--line);vertical-align:top}.data-table tr:hover td{background:#fcfdfb}.data-table .label{font-weight:650;font-size:12px}.data-table small{display:block;font-size:9px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere;max-width:170px}.action-cell{white-space:nowrap}.filter{display:flex;gap:5px;flex-wrap:wrap}.filter .active{background:#e2eee5;color:var(--green);border-color:#acc7b2}.wide-note{padding:14px 18px;background:#faf8ef;border:1px solid #ebe3c7;color:#76653a;border-radius:9px;font-size:11px;margin-bottom:18px}.model-info{padding:18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.model-info p{font-size:11px;color:var(--muted);margin:5px 0 0}.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.guide-card{padding:25px}.guide-number{font-size:11px;color:var(--green);letter-spacing:2px;display:block;margin-bottom:14px}.guide-card h2{margin-bottom:12px}.guide-card p,.guide-card li{font-size:12px;color:var(--muted);line-height:1.9}.guide-card ul{padding-left:18px}.guide-card code{background:#eaf1ec;padding:2px 4px;font-size:11px;overflow-wrap:anywhere}.subsection{font-size:12px;margin:18px 0 9px}.help-text{font-size:10px;color:var(--muted);line-height:1.7}.controls-note{margin-bottom:12px;font-size:11px;color:var(--muted)}dialog{border:1px solid var(--line);border-radius:12px;padding:0;max-width:min(760px,calc(100vw - 30px));width:760px;max-height:90vh;box-shadow:0 25px 90px #14322130;color:var(--ink);background:white}dialog::backdrop{background:#172d2470;backdrop-filter:blur(2px)}.dialog-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:2}.dialog-header h2{font-size:17px}.dialog-body{padding:22px 24px;max-height:68vh;overflow:auto}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.span-2{grid-column:1/-1}.dialog-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;bottom:0;background:#fcfdfc}.dialog-footer .group{display:flex;gap:8px}.route-editor{border:1px solid var(--line);border-radius:8px;padding:13px;margin:12px 0}.route-editor-header{display:flex;gap:10px;align-items:center;margin-bottom:9px}.route-editor-header input{flex:1}.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;max-height:175px;overflow:auto;background:#f8faf8;border-radius:5px;padding:9px}.check-label{display:flex;gap:7px;align-items:start;font-size:10px;overflow-wrap:anywhere}.section-line{display:flex;justify-content:space-between;align-items:center;margin:21px 0 8px}.section-line h3{margin:0}.json-editor{font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;min-height:380px;tab-size:2;white-space:pre;overflow:auto}.scenario-row{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #edf2ee;font-size:11px}.scenario-row small{display:block;color:var(--muted)}#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;background:#203d30;color:white;border-radius:8px;padding:14px 20px;box-shadow:0 8px 28px #0002;max-width:min(700px,92vw);font-size:12px;overflow-wrap:anywhere}#toast.error{background:#923f36}.empty-state{padding:32px;text-align:center;color:var(--muted)}.table-search{max-width:260px}.app-error{padding:40px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.pill-neutral{font-size:10px;border:1px solid var(--line);border-radius:5px;padding:3px 7px;color:var(--muted)}.row-count{font-size:11px;color:var(--muted);margin-top:10px}.scope-note{margin-top:6px;padding:8px 0;font-size:10px;color:var(--amber)}
+@media(min-width:1700px){.main{padding-left:44px;padding-right:44px}.analysis-grid{grid-template-columns:minmax(0,2.3fr) minmax(340px,1fr)}.graph{min-height:550px}.graph-wrap{max-height:620px}}
+@media(max-width:1180px){.shell{grid-template-columns:185px minmax(0,1fr)}.sidebar{padding:25px 13px}.brand{font-size:15px;gap:7px}.brand-sub{font-size:7px}.main{padding:0 22px 28px}.analysis-grid{grid-template-columns:1fr}.stack{grid-template-columns:1fr 1fr;align-items:start}.scenario-description{display:none}.graph-wrap{max-height:470px}.head-note{display:none}.top-actions .pill{display:none}.graph{min-width:700px}.insight{margin-bottom:17px}h1{font-size:24px}.topbar{height:76px}}
+@media(max-width:760px){.shell{display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px;gap:13px}.brand{font-size:18px}.brand-mark{width:32px;height:33px}.brand-sub{font-size:8px}.sidebar-note,.sidebar-footer,.workspace-label{display:none}nav{display:flex;gap:5px;overflow:auto}.nav-item{width:auto;white-space:nowrap;padding:8px;font-size:11px;gap:6px}.main{padding:0 16px 24px}.topbar{height:auto;padding:15px 0;align-items:flex-start}.breadcrumb{display:none}.top-actions{width:100%;flex-wrap:wrap;gap:6px}.top-actions .button{padding:7px 9px;font-size:10px}.top-actions .pill{display:inline-flex;margin-left:auto}.page-head{padding:21px 0 18px}h1{font-size:21px;letter-spacing:-.9px}.subcopy{font-size:11px}.eyebrow{font-size:9px}.scenario-bar{padding:14px;gap:10px;flex-wrap:wrap}.scenario-field{flex:1;min-width:170px}.date-field{width:130px}.scenario-bar>.button{width:100%}.metrics{gap:8px;margin:12px 0}.metric{padding:12px 10px;display:block}.metric-value{font-size:30px}.metric-label{font-size:10px;white-space:nowrap}.metric-note{font-size:8px}.metric-icon{display:none}.insight{display:block;padding:14px}.insight .button{margin-top:12px;width:100%}.insight-title{font-size:12px}.analysis-grid{gap:13px}.stack{display:grid;grid-template-columns:1fr;gap:13px}.panel-heading{padding:14px}.panel-heading h2{font-size:14px}.panel-heading .legend{display:none}.graph-wrap{max-height:360px}.graph{min-width:710px}.footnote{display:block}.footnote .privacy{margin-top:14px}.guide-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span-2{grid-column:auto}.dialog-body{padding:17px;max-height:65vh}.dialog-header{padding:16px 17px}.dialog-footer{padding:13px 17px}.check-grid{grid-template-columns:1fr}.scenario-row{grid-template-columns:minmax(0,1fr) 126px}.model-info{display:block}.model-info>.button{margin-top:12px}.toolbar .group{gap:5px}.toolbar .button{font-size:10px;padding:7px 9px}.data-table td,.data-table th{padding:11px}.head-note{display:none}}
+@media(prefers-reduced-motion:no-preference){.button,.nav-item,.goal-card{transition:background .15s,border-color .15s}dialog[open]{animation:appear .14s ease-out}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="node-dialog" aria-labelledby="node-dialog-title"></dialog>
+<dialog id="scenario-dialog" aria-labelledby="scenario-dialog-title"></dialog>
+<dialog id="json-dialog" aria-labelledby="json-dialog-title"></dialog>
+<input id="import-file" type="file" accept=".json,application/json" hidden>
+<noscript>BreakGlassMapにはJavaScriptが必要です。CLIはソース一式から実行できます。</noscript>
+<script>"use strict";const BGM=Object.create(null);
+BGM["schema"]=(()=>{
+/** Strict, versioned input boundary shared by the browser and CLI. */
+const LIMITS = Object.freeze({bytes:1048576,nodes:250,routes:16,depth:12,refs:8000,scenarios:32});
+const CATEGORIES = Object.freeze(['identity','network','credential','document','people','system','other']);
+class ModelError extends Error {
+  constructor(message,path='model') { super(`${path}: ${message}`);this.name='ModelError';this.path=path; }
+}
+const schemaFail = (path,message) => {throw new ModelError(message,path);};
+function schemaObject(value,path) {
+  if(!value || typeof value!=='object' || Array.isArray(value) || ![Object.prototype,null].includes(Object.getPrototypeOf(value))) schemaFail(path,'expected an object');
+}
+function schemaKeys(value,allowed,path) {
+  schemaObject(value,path);
+  for(const k of Object.keys(value))if(!allowed.includes(k))schemaFail(`${path}.${k}`,'unknown field');
+}
+function schemaText(value,path,max=160,required=true) {
+  if(value===undefined&&!required)return '';
+  if(typeof value!=='string'||value.length>max||(required&&!value.trim()))schemaFail(path,`expected ${required?'nonempty ':''}text, maximum ${max} characters`);
+  if(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value))schemaFail(path,'control characters are not allowed');
+  return value;
+}
+function schemaId(value,path) {
+  if(typeof value!=='string'||!(/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/).test(value)||['constructor','prototype','__proto__'].includes(value))schemaFail(path,'invalid identifier: use 1–64 letters, numbers, dots, hyphens or underscores, starting with a letter or number');
+  return value;
+}
+function validDate(value) {
+  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+  const date=new Date(`${value}T00:00:00.000Z`);
+  return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;
+}
+function schemaEvidence(value,path) {
+  if(value===undefined)return {status:'not-tested'};
+  schemaKeys(value,['status','checkedAt','reviewer','reference','scope','conditionHash','maxAgeDays','notes'],path);
+  if(!['not-tested','passed','failed'].includes(value.status))schemaFail(`${path}.status`,'expected not-tested, passed or failed');
+  const result={status:value.status};
+  if(value.conditionHash!==undefined){
+    if(typeof value.conditionHash!=='string'||!/^bgm1-[a-f0-9]{16}$/.test(value.conditionHash))schemaFail(`${path}.conditionHash`,'invalid condition hash');
+    result.conditionHash=value.conditionHash;
+  }
+  if(value.checkedAt!==undefined&&!validDate(value.checkedAt))schemaFail(`${path}.checkedAt`,'invalid date');
+  if(value.status!=='not-tested'&&!validDate(value.checkedAt))schemaFail(`${path}.checkedAt`,'a valid date is required');
+  if(value.checkedAt!==undefined)result.checkedAt=value.checkedAt;
+  for(const field of ['reviewer','reference','scope']) {
+    const text=schemaText(value[field],`${path}.${field}`,field==='reference'?500:160,value.status!=='not-tested');
+    if(text)result[field]=text;
+  }
+  if(value.notes!==undefined)result.notes=schemaText(value.notes,`${path}.notes`,1000,false);
+  if(value.maxAgeDays!==undefined&&(!Number.isInteger(value.maxAgeDays)||value.maxAgeDays<1||value.maxAgeDays>3650))schemaFail(`${path}.maxAgeDays`,'expected integer 1–3650');
+  result.maxAgeDays=value.maxAgeDays??90;
+  return result;
+}
+function schemaExpression(expr,path,ids,budget,depth=0) {
+  if(depth>LIMITS.depth)schemaFail(path,'expression depth limit exceeded');
+  schemaKeys(expr,['ref','all','any'],path);
+  const keys=Object.keys(expr);
+  if(keys.length!==1)schemaFail(path,'expression must have exactly one operator (ref/all/any)');
+  const op=keys[0];
+  if(op==='ref') {
+    const id=schemaId(expr.ref,`${path}.ref`);
+    if(!ids.has(id))schemaFail(path,`unknown reference ${id}`);
+    if(++budget.refs>LIMITS.refs)schemaFail(path,'reference limit exceeded');
+    return {ref:id};
+  }
+  if(!Array.isArray(expr[op])||expr[op].length<1||expr[op].length>250)schemaFail(path,'operator needs a nonempty array of 1–250 expressions');
+  return {[op]:expr[op].map((x,i)=>schemaExpression(x,`${path}.${op}[${i}]`,ids,budget,depth+1))};
+}
+function validateScenario(value,ids,path='scenario') {
+  schemaKeys(value,['id','name','description','unavailable','unknown'],path);
+  const result={id:schemaId(value.id,`${path}.id`),name:schemaText(value.name,`${path}.name`),description:schemaText(value.description,`${path}.description`,2000,false)};
+  for(const field of ['unavailable','unknown']) {
+    const list=value[field]??[];
+    if(!Array.isArray(list)||list.length>LIMITS.nodes)schemaFail(`${path}.${field}`,'expected a bounded array');
+    result[field]=list.map((id,i)=>{schemaId(id,`${path}.${field}[${i}]`);if(!ids.has(id))schemaFail(`${path}.${field}`,`unknown reference ${id}`);return id;});
+    if(new Set(result[field]).size!==result[field].length)schemaFail(`${path}.${field}`,'duplicate identifier');
+  }
+  if(result.unavailable.some(id=>result.unknown.includes(id)))schemaFail(path,'overlap: a node cannot be both unavailable and unknown');
+  return result;
+}
+function validateModel(input) {
+  let size;
+  try {size=new TextEncoder().encode(JSON.stringify(input)).length;}catch {schemaFail('model','input must be JSON-serializable');}
+  if(size>LIMITS.bytes)schemaFail('model','input exceeds 1 MiB limit');
+  schemaKeys(input,['schemaVersion','name','description','nodes','scenarios'],'model');
+  if(input.schemaVersion!==1)schemaFail('model.schemaVersion','unsupported schema version; expected 1');
+  const result={schemaVersion:1,name:schemaText(input.name,'model.name'),description:schemaText(input.description,'model.description',4000,false),nodes:[],scenarios:[]};
+  if(!Array.isArray(input.nodes)||!input.nodes.length||input.nodes.length>LIMITS.nodes)schemaFail('model.nodes',`expected 1–${LIMITS.nodes} nodes`);
+  const ids=new Set();
+  for(const [i,node]of input.nodes.entries()) {
+    schemaObject(node,`nodes[${i}]`);schemaId(node.id,`nodes[${i}].id`);
+    if(ids.has(node.id))schemaFail(`nodes[${i}].id`,'duplicate node identifier');ids.add(node.id);
+  }
+  const budget={refs:0};
+  result.nodes=input.nodes.map((node,i)=>{
+    const p=`nodes[${i}]`;
+    schemaKeys(node,['id','label','kind','category','initial','routes','owner','systemId','notes','evidence'],p);
+    if(!['resource','action','goal'].includes(node.kind))schemaFail(`${p}.kind`,'expected resource, action or goal');
+    const normalized={id:node.id,label:schemaText(node.label,`${p}.label`,120),kind:node.kind,category:node.category??'other',owner:schemaText(node.owner,`${p}.owner`,160,false),systemId:schemaText(node.systemId,`${p}.systemId`,120,false),notes:schemaText(node.notes,`${p}.notes`,2000,false),evidence:schemaEvidence(node.evidence,`${p}.evidence`)};
+    if(!CATEGORIES.includes(normalized.category))schemaFail(`${p}.category`,'unknown category');
+    if(node.kind==='resource') {
+      if(node.routes!==undefined)schemaFail(p,'resource cannot have routes; model restoration as a separate action');
+      normalized.initial=node.initial??'unknown';
+      if(!['available','unavailable','unknown'].includes(normalized.initial))schemaFail(`${p}.initial`,'expected available, unavailable or unknown');
+    }else {
+      if(node.initial!==undefined)schemaFail(p,'derived action/goal cannot have initial state');
+      const routes=node.routes??[];
+      if(!Array.isArray(routes)||routes.length>LIMITS.routes)schemaFail(`${p}.routes`,`expected 0–${LIMITS.routes} routes`);
+      const routeIds=new Set();
+      normalized.routes=routes.map((route,j)=>{
+        const rp=`${p}.routes[${j}]`;
+        schemaKeys(route,['id','label','requires'],rp);schemaId(route.id,`${rp}.id`);
+        if(routeIds.has(route.id))schemaFail(rp,'duplicate route identifier');routeIds.add(route.id);
+        return {id:route.id,label:schemaText(route.label,`${rp}.label`,160),requires:schemaExpression(route.requires,`${rp}.requires`,ids,budget)};
+      });
+    }
+    return normalized;
+  });
+  if(!result.nodes.some(n=>n.kind==='goal'))schemaFail('model.nodes','at least one goal is required');
+  const scenarios=input.scenarios??[];
+  if(!Array.isArray(scenarios)||scenarios.length>LIMITS.scenarios)schemaFail('model.scenarios',`expected 0–${LIMITS.scenarios} scenarios`);
+  const scenarioIds=new Set();
+  result.scenarios=scenarios.map((s,i)=>{
+    const v=validateScenario(s,ids,`scenarios[${i}]`);
+    if(scenarioIds.has(v.id))schemaFail(`scenarios[${i}].id`,'duplicate scenario identifier');scenarioIds.add(v.id);return v;
+  });
+  if(!result.scenarios.length)result.scenarios=[{id:'baseline',name:'Baseline',description:'',unavailable:[],unknown:[]}];
+  return result;
+}
+function parseModel(text) {
+  if(typeof text!=='string')schemaFail('JSON','expected text');
+  if(new TextEncoder().encode(text).length>LIMITS.bytes)schemaFail('JSON','input exceeds 1 MiB limit');
+  let value;
+  try {value=JSON.parse(text.replace(/^\uFEFF/,''));}catch {schemaFail('JSON','invalid JSON; check commas, quotation marks and brackets');}
+  return validateModel(value);
+}
+
+return {LIMITS,CATEGORIES,ModelError,validDate,validateScenario,validateModel,parseModel};
+})();
+BGM["fingerprint"]=(()=>{
+/** Non-cryptographic change detector, NOT a signature or evidence authenticity check.
+ * FNV-1a-64 binds a self-reported exercise record to the model's structural inputs
+ * and selected scenario. Metadata/evidence are excluded; all nodes are included.
+ */
+function conditionFingerprint(model,scenario) {
+  const normalized={
+    version:1,
+    nodes:model.nodes.map(n=>({id:n.id,kind:n.kind,...(n.kind==='resource'?{initial:n.initial??'unknown'}:{routes:(n.routes??[]).map(r=>({id:r.id,requires:r.requires})).sort((a,b)=>a.id.localeCompare(b.id,'en'))})})).sort((a,b)=>a.id.localeCompare(b.id,'en')),
+    scenario:{id:scenario.id,unavailable:[...(scenario.unavailable??[])].sort(),unknown:[...(scenario.unknown??[])].sort()}
+  };
+  let hash=0xcbf29ce484222325n;
+  for(const byte of new TextEncoder().encode(JSON.stringify(normalized))){hash^=BigInt(byte);hash=(hash*0x100000001b3n)&0xffffffffffffffffn;}
+  return 'bgm1-'+hash.toString(16).padStart(16,'0');
+}
+
+return {conditionFingerprint};
+})();
+BGM["engine"]=(()=>{
+const {conditionFingerprint} = BGM["fingerprint"];
+const {validateModel,validateScenario,validDate,ModelError} = BGM["schema"];
+/** Nodes are capabilities, not observed live services. `ready` is model feasibility only. */
+const STATUS_LABELS = Object.freeze({ready:'構成上成立',blocked:'開始不可',unknown:'情報不足'});
+const EVIDENCE_LABELS = Object.freeze({'not-tested':'未訓練',current:'記録あり（本人申告）',stale:'確認期限超過',failed:'訓練失敗',future:'未来日付','scope-mismatch':'別シナリオの記録',unbound:'構成との紐付けなし','conditions-changed':'構成・障害条件が変更済み'});
+function listRefs(expr) {
+  if(expr.ref!==undefined)return [expr.ref];
+  return [...new Set((expr.all??expr.any).flatMap(listRefs))];
+}
+function engineBoolean(expr,set) {
+  if(expr.ref!==undefined)return set.has(expr.ref);
+  if(expr.all)return expr.all.every(x=>engineBoolean(x,set));
+  return expr.any.some(x=>engineBoolean(x,set));
+}
+function engineWitness(expr,set) {
+  if(expr.ref!==undefined)return [expr.ref];
+  if(expr.all)return [...new Set(expr.all.flatMap(x=>engineWitness(x,set)))];
+  return engineWitness(expr.any.find(x=>engineBoolean(x,set)),set);
+}
+function engineClosure(nodes,scenario,optimistic) {
+  const blocked=new Set(scenario.unavailable),unknown=new Set(scenario.unknown),known=new Set(),proof=new Map();
+  for(const n of nodes) {
+    if(blocked.has(n.id))continue;
+    if(unknown.has(n.id)) {if(optimistic){known.add(n.id);proof.set(n.id,{stage:0,routeId:null,dependencies:[],basis:'scenario-unknown'});}continue;}
+    const seed=n.kind==='resource'?(n.initial==='available'||(optimistic&&n.initial==='unknown')):(optimistic&&!n.routes.length);
+    if(seed){known.add(n.id);proof.set(n.id,{stage:0,routeId:null,dependencies:[],basis:n.kind==='resource'?n.initial:'undefined-routes'});}
+  }
+  for(let round=1;round<=nodes.length;round++) {
+    const additions=[];
+    for(const n of nodes) {
+      if(n.kind==='resource'||known.has(n.id)||blocked.has(n.id)||unknown.has(n.id))continue;
+      const route=n.routes.find(r=>engineBoolean(r.requires,known));
+      if(route)additions.push({id:n.id,stage:round,routeId:route.id,dependencies:engineWitness(route.requires,known),basis:'route'});
+    }
+    if(!additions.length)break;
+    for(const {id,...w}of additions){known.add(id);proof.set(id,w);}
+  }
+  return {known,proof};
+}
+function engineScc(nodes) {
+  const byId=new Map(nodes.map(n=>[n.id,n]));let index=0;
+  const stack=[],onStack=new Set(),indices=new Map(),low=new Map(),components=[];
+  const edges=id=>(byId.get(id).routes??[]).flatMap(r=>listRefs(r.requires));
+  function visit(id) {
+    indices.set(id,index);low.set(id,index++);stack.push(id);onStack.add(id);
+    for(const dep of edges(id)) {
+      if(!indices.has(dep)){visit(dep);low.set(id,Math.min(low.get(id),low.get(dep)));}
+      else if(onStack.has(dep))low.set(id,Math.min(low.get(id),indices.get(dep)));
+    }
+    if(low.get(id)===indices.get(id)) {
+      const part=[];let last;
+      do {last=stack.pop();onStack.delete(last);part.push(last);}while(last!==id);
+      if(part.length>1||edges(id).includes(id))components.push(part.sort());
+    }
+  }
+  nodes.forEach(n=>{if(!indices.has(n.id))visit(n.id);});
+  return components.sort((a,b)=>a[0].localeCompare(b[0],'en'));
+}
+function evidenceState(evidence,asOf,scenarioId,fingerprint) {
+  if(!evidence||evidence.status==='not-tested')return 'not-tested';
+  const days=(new Date(`${asOf}T00:00:00Z`)-new Date(`${evidence.checkedAt}T00:00:00Z`))/86400000;
+  if(days<0)return 'future';
+  if(evidence.status==='failed')return 'failed';
+  if(evidence.scope!==scenarioId)return 'scope-mismatch';
+  if(days>(evidence.maxAgeDays??90))return 'stale';
+  if(!evidence.conditionHash)return 'unbound';
+  if(evidence.conditionHash!==fingerprint)return 'conditions-changed';
+  return 'current';
+}
+/** Deterministic under an explicit asOf YYYY-MM-DD. No network, storage or model mutation. */
+function analyze(input,scenarioArg,options={}) {
+  const model=validateModel(input),nodes=[...model.nodes].sort((a,b)=>a.id.localeCompare(b.id,'en'));
+  const asOf=options.asOf??new Date().toISOString().slice(0,10);
+  if(!validDate(asOf))throw new ModelError('invalid as-of date','analysis');
+  const selected=typeof scenarioArg==='object'&&scenarioArg!==null?scenarioArg:model.scenarios.find(s=>s.id===(scenarioArg??model.scenarios[0].id));
+  if(!selected)throw new ModelError('unknown scenario','analysis');
+  const scenario=validateScenario(selected,new Set(nodes.map(n=>n.id)));
+  const conditionHash=conditionFingerprint(model,scenario);
+  const lower=engineClosure(nodes,scenario,false),upper=engineClosure(nodes,scenario,true);
+  const state=id=>lower.known.has(id)?'ready':upper.known.has(id)?'unknown':'blocked';
+  const expressionState=expr=>engineBoolean(expr,lower.known)?'ready':engineBoolean(expr,upper.known)?'unknown':'blocked';
+  const results=nodes.map(n=>({id:n.id,label:n.label,kind:n.kind,category:n.category,owner:n.owner,systemId:n.systemId,status:state(n.id),stage:lower.proof.get(n.id)?.stage??null,witness:lower.proof.get(n.id)??null,possibleWitness:upper.proof.get(n.id)??null,evidenceStatus:evidenceState(n.evidence,asOf,scenario.id,conditionHash),forced:scenario.unavailable.includes(n.id)?'unavailable':scenario.unknown.includes(n.id)?'unknown':null,routes:(n.routes??[]).map(r=>({id:r.id,label:r.label,status:expressionState(r.requires),dependencies:listRefs(r.requires).map(id=>({id,status:state(id)}))}))}));
+  const byId=new Map(nodes.map(n=>[n.id,n])),resultById=new Map(results.map(n=>[n.id,n]));
+  // Walk only unresolved branches that can explain the result. For unknown ORs,
+  // impossible branches are not causal; ready alternatives never become blockers.
+  function unresolved(expr) {
+    const es=expressionState(expr);if(es==='ready')return [];
+    if(expr.ref!==undefined)return [expr.ref];
+    const children=expr.all??expr.any;
+    const relevant=expr.all?(es==='blocked'?children.filter(x=>expressionState(x)==='blocked'):children.filter(x=>expressionState(x)==='unknown')):(es==='unknown'?children.filter(x=>expressionState(x)==='unknown'):children);
+    return [...new Set(relevant.flatMap(unresolved))];
+  }
+  const traces=new Map();
+  const goals=results.filter(n=>n.kind==='goal');
+  for(const g of goals) {
+    const visited=new Set(),leaves=[];
+    function walk(id) {
+      if(visited.has(id)||state(id)==='ready')return;visited.add(id);
+      const n=byId.get(id),r=resultById.get(id);
+      if(r.forced||n.kind==='resource'||!n.routes.length){leaves.push(id);return;}
+      for(const route of n.routes) {
+        if(r.status==='unknown'&&expressionState(route.requires)==='blocked')continue;
+        unresolved(route.requires).forEach(walk);
+      }
+    }
+    walk(g.id);traces.set(g.id,{visited,leaves:leaves.sort()});
+    g.blockers=leaves.sort();g.unresolvedDependencies=[...visited].filter(id=>id!==g.id).sort();
+  }
+  const cycles=engineScc(nodes).map((part,i)=>({id:`cycle-${i+1}`,nodes:part,status:part.every(id=>state(id)==='ready')?'resolved':part.some(id=>state(id)==='unknown')?'unknown':'blocked',affectedGoals:goals.filter(g=>g.status!=='ready'&&part.some(id=>traces.get(g.id).visited.has(id))).map(g=>g.id)}));
+  const checklist=[];
+  for(const n of nodes) {
+    const r=resultById.get(n.id),affected=goals.filter(g=>traces.get(g.id).leaves.includes(n.id)).map(g=>g.id);
+    if(affected.length)checklist.push({id:`availability:${n.id}`,nodeId:n.id,label:n.label,code:r.status==='unknown'?'confirm-condition':'design-alternative',priority:r.status==='unknown'?'P2':'P1',status:r.status,owner:n.owner,systemId:n.systemId,affectedGoals:affected,question:r.status==='unknown'?(n.kind!=='resource'&&!n.routes.length?'開始に必要な条件・復旧経路を定義してください。':'障害時にこの条件が成立するか、担当者と確認してください。'):'この条件を必要としない独立した代替手段、または明示的な復旧操作を設計してください。',evidence:n.evidence});
+    if(r.evidenceStatus!=='current')checklist.push({id:`evidence:${n.id}`,nodeId:n.id,label:n.label,code:`evidence-${r.evidenceStatus}`,priority:r.evidenceStatus==='failed'?'P1':'P3',status:r.evidenceStatus,owner:n.owner,systemId:n.systemId,affectedGoals:[],question:r.evidenceStatus==='failed'?'訓練失敗と構成上の条件を照合し、原因と再試験結果を記録してください。':`選択したシナリオでの確認範囲・担当者・日付・証跡参照を記録してください（${EVIDENCE_LABELS[r.evidenceStatus]}）。`,evidence:n.evidence});
+  }
+  for(const c of cycles.filter(x=>x.affectedGoals.length))checklist.push({id:c.id,nodeId:c.nodes[0],label:'循環する復旧条件',code:'review-cycle',priority:'P1',status:c.status,owner:'',systemId:'',affectedGoals:c.affectedGoals,question:`${c.nodes.map(id=>byId.get(id).label).join(' / ')}：循環の外から開始できる独立条件を確認してください。構造上の循環のみで障害原因を確定しないでください。`,evidence:{status:'not-tested'}});
+  checklist.sort((a,b)=>a.priority.localeCompare(b.priority)||a.id.localeCompare(b.id,'en'));
+  const summary={ready:0,blocked:0,unknown:0};goals.forEach(g=>summary[g.status]++);
+  return {schemaVersion:1,toolVersion:'0.1.0-alpha.1',modelName:model.name,asOf,scenario,conditionHash,summary,nodes:results,goals,cycles,checklist,limitations:['入力された条件に基づく構成上の判定であり、実際の復旧成功・安全性・RTO達成を保証しません。','強制停止した条件はシナリオ中は利用できません。回復させる操作・独立経路は別ノードで明示してください。','訓練記録は利用者の申告です。証跡の内容や真正性、全体の訓練完了を検証しません。']};
+}
+
+return {STATUS_LABELS,EVIDENCE_LABELS,listRefs,evidenceState,analyze};
+})();
+BGM["report"]=(()=>{
+const {STATUS_LABELS,EVIDENCE_LABELS} = BGM["engine"];
+function escapeHtml(value) {return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function reportCell(value) {
+  let s=String(value??'');
+  if(/^[\s\uFEFF]*[=+\-@]|^[\t\r\n]/.test(s))s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+function toCsv(model,analysis) {
+  const headers=['priority','item_id','node_id','label','owner','system_id','code','status','affected_goals','question','evidence_date','evidence_reviewer','evidence_reference','evidence_scope','scenario_id','as_of'];
+  const rows=analysis.checklist.map(i=>[i.priority,i.id,i.nodeId,i.label,i.owner,i.systemId,i.code,i.status,i.affectedGoals.join(' | '),i.question,i.evidence.checkedAt,i.evidence.reviewer,i.evidence.reference,i.evidence.scope,analysis.scenario.id,analysis.asOf]);
+  return '\uFEFF'+[headers,...rows].map(row=>row.map(reportCell).join(',')).join('\r\n')+'\r\n';
+}
+function toText(model,analysis) {
+  const names=new Map(model.nodes.map(n=>[n.id,n.label]));
+  const lines=[`BreakGlassMap ${analysis.toolVersion}`,`${model.name}`,`Scenario: ${analysis.scenario.name} [${analysis.scenario.id}] | As of: ${analysis.asOf}`,'',`GOALS: ready=${analysis.summary.ready} blocked=${analysis.summary.blocked} unknown=${analysis.summary.unknown}`];
+  for(const g of analysis.goals) {
+    lines.push(`- [${g.status} / ${STATUS_LABELS[g.status]}] ${g.label} (${g.id})`);
+    for(const id of g.blockers??[])lines.push(`    unmet: ${names.get(id)} (${id})`);
+  }
+  for(const c of analysis.cycles.filter(x=>x.affectedGoals.length))lines.push(`- Circular conditions: ${c.nodes.join(' <-> ')}; unresolved goals: ${c.affectedGoals.join(', ')}`);
+  lines.push('','CHECKLIST');
+  for(const i of analysis.checklist)lines.push(`[${i.priority}] ${i.label} — ${i.question} | owner: ${i.owner||'unassigned'}`);
+  lines.push('','LIMITATIONS',...analysis.limitations.map(x=>`- ${x}`));
+  return lines.join('\n')+'\n';
+}
+function toHtml(model,analysis) {
+  const h=escapeHtml;
+  const goalRows=analysis.goals.map(g=>`<tr><td>${h(g.label)}<small>${h(g.id)}</small></td><td class="${g.status}">${h(STATUS_LABELS[g.status])}</td><td>${h(g.owner||'未設定')}</td><td>${h(EVIDENCE_LABELS[g.evidenceStatus])}</td></tr>`).join('');
+  const checkRows=analysis.checklist.map(i=>`<tr><td>${h(i.priority)}</td><td>${h(i.label)}<small>${h(i.nodeId)}</small></td><td>${h(i.question)}</td><td>${h(i.owner||'未設定')}</td><td>${h(i.evidence.checkedAt||'—')}<small>${h(i.evidence.reference||'')}</small></td></tr>`).join('');
+  const routeRows=analysis.nodes.map(n=>`<h3>${h(n.label)} <span class="${n.status}">${h(STATUS_LABELS[n.status])}</span></h3><p>担当: ${h(n.owner||'未設定')} / ${h(n.systemId||'SYSID未設定')} / 訓練記録: ${h(EVIDENCE_LABELS[n.evidenceStatus])}</p>${n.routes.length?'<ul>'+n.routes.map(r=>`<li>${h(r.label)}: ${h(STATUS_LABELS[r.status])} — ${r.dependencies.map(d=>`${h(d.id)} (${h(STATUS_LABELS[d.status])})`).join(', ')}</li>`).join('')+'</ul>':'<p>独立した初期条件、または未定義の経路。詳細は入力モデルを参照。</p>'}`).join('');
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>BreakGlassMap — ${h(model.name)}</title><style>body{font:15px/1.7 system-ui,sans-serif;color:#1d2935;max-width:1120px;margin:40px auto;padding:0 28px}h1{font-size:36px;letter-spacing:-1px}h2{margin-top:36px}h3{font-size:16px}small{display:block;color:#667580}table{border-collapse:collapse;width:100%;margin:20px 0}th,td{padding:12px;text-align:left;border-bottom:1px solid #dde4e7;vertical-align:top}th{background:#edf2f1}.ready{color:#11735d}.blocked{color:#b64235}.unknown{color:#95600d}.note{padding:16px;background:#f5f4ec;border-left:4px solid #a68b38}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f5f5;padding:16px}p{overflow-wrap:anywhere}@media print{body{margin:0;font-size:10pt}tr{break-inside:avoid}details{display:none}}</style></head><body><small>BREAKGLASSMAP / RECOVERY READINESS · ${h(analysis.toolVersion)}</small><h1>${h(model.name)}</h1><p>${h(analysis.scenario.name)} [${h(analysis.scenario.id)}] · 評価基準日 ${h(analysis.asOf)}</p><div class="note">${analysis.limitations.map(x=>h(x)).join('<br>')}<br>このレポートは構成情報を含みます。承認された場所に保管してください。</div><h2>復旧目標</h2><table><thead><tr><th>目標</th><th>構成上の判定</th><th>担当</th><th>訓練記録（別軸）</th></tr></thead><tbody>${goalRows}</tbody></table><h2>選択した障害条件</h2><p>強制停止: ${h(analysis.scenario.unavailable.join(', ')||'なし')}<br>状態不明: ${h(analysis.scenario.unknown.join(', ')||'なし')}</p><h2>確認・訓練チェックリスト</h2><table><thead><tr><th>優先度</th><th>対象</th><th>確認事項</th><th>担当</th><th>日付・証跡</th></tr></thead><tbody>${checkRows}</tbody></table><h2>経路と判定根拠</h2>${routeRows}<h2>構造上の循環</h2>${analysis.cycles.length?analysis.cycles.map(c=>`<p>${h(c.nodes.join(' ↔ '))}<br>未解決目標への関連: ${h(c.affectedGoals.join(', ')||'なし（代替経路等で成立）')}</p>`).join(''):'<p>入力モデルでは検出なし。</p>'}<details><summary>入力モデル（再現用。内容は未暗号化）</summary><pre>${h(JSON.stringify(model,null,2))}</pre></details><footer><hr><small>Generated locally by BreakGlassMap. No environment access, recovery execution, or independent evidence validation.</small></footer></body></html>`;
+}
+
+return {escapeHtml,toCsv,toText,toHtml};
+})();
+BGM["demo"]=(()=>{
+const demoRef = ref => ({ref});
+const demoAll = (...refs) => ({all:refs.map(demoRef)});
+const demoResource = (id,label,category,initial,owner,notes='') => ({id,label,kind:'resource',category,initial,owner,notes,evidence:{status:'not-tested'}});
+const demoRoute = (id,label,...refs) => ({id,label,requires:demoAll(...refs)});
+const demoAction = (id,label,category,routes,owner,notes='') => ({id,label,kind:'action',category,routes,owner,notes,evidence:{status:'not-tested'}});
+const DEMO = {
+  schemaVersion:1,name:'架空例 / Identity & PAM Recovery',
+  description:'製品の実仕様ではなく、循環する復旧条件を説明するための架空構成です。実環境の証跡・資格情報は含みません。IdP停止時、資格情報はPAM内、手順書はSSO配下。独立手段の有無で開始可否が変わります。',
+  nodes:[
+    demoResource('idp-health','通常認証サービス','identity','available','認証チーム','障害シナリオでは停止したまま。復旧後の利用は「認証基盤の復旧操作」を別経路として表現。'),
+    demoResource('maintenance-net','独立した保守回線','network','available','NWチーム','モデル上の申告。回線の共通障害要因は別途点検。'),
+    demoResource('admin-device','管理用端末','system','available','運用チーム'),
+    demoResource('oncall','当番・承認者の確保','people','available','運用責任者'),
+    demoResource('offline-kit','独立した緊急認証手段','credential','unavailable','認証チーム','鍵・パスワードそのものは保存しない。強い認証、独立した利用条件、承認・監査を備えた手段を別途設計。'),
+    demoResource('offline-runbook','オフライン手順書','document','unavailable','BCPチーム','実行に必要な手順が、停止する認証に依存せず参照可能か。'),
+    demoResource('backup-media','復元用バックアップ','system','available','バックアップ担当','ファイルの存在だけで整合性・復元成功を保証するものではない。'),
+    demoResource('hotline','独立した緊急連絡先','people','unknown','BCPチーム','当該障害条件でも連絡可能か未確認。'),
+    demoAction('cloud-login','管理者の認証','identity',[
+      demoRoute('normal','通常認証','idp-health','maintenance-net','admin-device'),
+      demoRoute('restored','復旧した認証基盤を使う','recover-idp','maintenance-net','admin-device')
+    ],'認証チーム'),
+    demoAction('pam-login','PAMにログイン','identity',[
+      demoRoute('normal','SSO経由','cloud-login','maintenance-net'),
+      demoRoute('independent','独立した緊急アクセス経由','offline-kit','maintenance-net','admin-device','oncall')
+    ],'PAMチーム'),
+    demoAction('recovery-secret','復旧用資格情報の取得','credential',[demoRoute('vault','PAM内から取得','pam-login')],'PAMチーム','取得できる条件のみ記録。秘密値は一切入力しない。'),
+    demoAction('read-runbook','復旧手順書の参照','document',[
+      demoRoute('online','SSO配下のオンライン版','cloud-login'),
+      demoRoute('offline','独立したオフライン版','offline-runbook')
+    ],'BCPチーム'),
+    demoAction('recover-idp','認証基盤の復旧操作','system',[demoRoute('recovery','資格情報・手順・作業環境が必要','recovery-secret','read-runbook','maintenance-net','admin-device','oncall')],'認証チーム'),
+    demoAction('backup-console','復元コンソールへのアクセス','system',[demoRoute('pam','PAMと手順書が必要','pam-login','read-runbook')],'バックアップ担当'),
+    {...demoAction('goal-identity','認証復旧の作業を開始','system',[demoRoute('start','復旧操作の前提が成立','recover-idp')],'認証チーム'),kind:'goal',systemId:'DEMO-ID-01'},
+    {...demoAction('goal-restore','業務データの復元を開始','system',[demoRoute('start','コンソール・媒体・当番が必要','backup-console','backup-media','oncall')],'バックアップ担当'),kind:'goal',systemId:'DEMO-APP-01'},
+    {...demoAction('goal-notify','障害時の連絡を開始','people',[demoRoute('contact','独立した連絡先と当番','hotline','oncall')],'BCPチーム'),kind:'goal'}
+  ],
+  scenarios:[
+    {id:'identity-outage',name:'認証基盤停止',description:'通常認証サービスが利用できない状態。代替アクセスの入口と手順書の所在を確認する。',unavailable:['idp-health'],unknown:[]},
+    {id:'baseline',name:'通常時の前提確認',description:'強制停止なし。利用可能と申告した初期条件を前提にする。',unavailable:[],unknown:[]},
+    {id:'network-outage',name:'保守回線停止',description:'保守回線をシナリオ全体で停止させる。別回線を使う場合は別条件として追加する。',unavailable:['maintenance-net'],unknown:[]},
+    {id:'compound-outage',name:'認証＋保守回線停止',description:'共通障害で認証と保守経路の両方が失われた場合。',unavailable:['idp-health','maintenance-net'],unknown:[]}
+  ]
+};
+function improvedDemo() {
+  const model=structuredClone(DEMO);
+  for(const id of ['offline-kit','offline-runbook'])model.nodes.find(n=>n.id===id).initial='available';
+  model.name='架空例 / Independent Recovery Path';
+  return model;
+}
+function emptyModel() {
+  return {schemaVersion:1,name:'新しい復旧モデル',description:'',nodes:[{id:'goal-1',label:'最初の復旧目標',kind:'goal',category:'system',routes:[],owner:'',evidence:{status:'not-tested'}}],scenarios:[{id:'baseline',name:'通常時の前提確認',unavailable:[],unknown:[]}]};
+}
+
+return {DEMO,improvedDemo,emptyModel};
+})();
+BGM["ui"]=(()=>{
+const {conditionFingerprint} = BGM["fingerprint"];
+const {validateModel,parseModel,validDate,CATEGORIES,LIMITS} = BGM["schema"];
+const {analyze,listRefs,STATUS_LABELS,EVIDENCE_LABELS} = BGM["engine"];
+const {escapeHtml,toCsv,toHtml} = BGM["report"];
+const {DEMO,improvedDemo,emptyModel} = BGM["demo"];
+const h=escapeHtml;
+const $=selector=>document.querySelector(selector);
+const CATEGORY_LABELS={identity:'認証',network:'ネットワーク',credential:'資格情報の取得条件',document:'手順・文書',people:'人・承認',system:'システム',other:'その他'};
+const KIND_LABELS={resource:'初期条件',action:'操作・能力',goal:'復旧目標'};
+const INITIAL_LABELS={available:'利用可能（申告）',unavailable:'利用不可',unknown:'未確認'};
+const STORAGE_KEY='breakglassmap.workspace.v1';
+const OPTIN_KEY='breakglassmap.persistence.v1';
+const ICON_PATHS={shield:'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Zm-1 5-2 5h4l-2 5',map:'M4 5h6v5H4zM14 14h6v5h-6zM14 4h6v5h-6zM7 10v6h7M10 7h4',check:'m5 12 4 4L19 6',lock:'M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3M12 14v3',question:'M9 8a3 3 0 1 1 5 2c-2 1-2 2-2 3M12 17h.01',arrow:'M4 12h15m-6-6 6 6-6 6',download:'M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4',upload:'M12 16V4m-5 5 5-5 5 5M5 17v4h14v-4',plus:'M12 5v14M5 12h14',edit:'m14 5 5 5M4 20l4-1L20 7l-4-4L4 15v5Z',close:'m6 6 12 12M6 18 18 6',file:'M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h6',globe:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c-5 5-5 13 0 18 5-5 5-13 0-18',undo:'M9 6 4 11l5 5M4 11h10a5 5 0 0 1 5 5',settings:'M4 7h16M8 4v6M4 17h16M16 14v6',list:'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',book:'M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3V4Zm9 2v15',trash:'M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7'};
+function icon(name,size=16){return `<svg class="icon" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICON_PATHS[name]??ICON_PATHS.file}"></path></svg>`;}
+function badge(status,label){return `<span class="badge ${h(status)}">${h(label??STATUS_LABELS[status]??EVIDENCE_LABELS[status]??status)}</span>`;}
+function button(action,label,ico='',cls='',data=''){return `<button type="button" class="button ${cls}" data-action="${action}" ${data}>${ico?icon(ico):''}${h(label)}</button>`;}
+const uiState={model:validateModel(structuredClone(DEMO)),scenarioId:'identity-outage',custom:null,asOf:new Date().toISOString().slice(0,10),tab:'overview',selected:'goal-identity',filter:'all',search:'',persist:false,storageAvailable:true,dirty:false,comparison:null};
+let analysis,editingNode=null,editingScenario=null,toastTimer;
+function toast(message,error=false){clearTimeout(toastTimer);const el=$('#toast');el.textContent=message;el.hidden=false;el.className=error?'error':'';toastTimer=setTimeout(()=>{el.hidden=true;},error?11000:4500);}
+function restoreStored(){
+  try {
+    let optedIn;
+    try{optedIn=localStorage.getItem(OPTIN_KEY)==='yes';}catch{uiState.storageAvailable=false;return;}
+    if(!optedIn)return;
+    uiState.persist=true;
+    const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+    if(new TextEncoder().encode(raw).length>LIMITS.bytes+4096)throw new Error('保存内容が上限を超えています。');
+    const saved=JSON.parse(raw);
+    const m=validateModel(saved.model);
+    uiState.model=m;uiState.scenarioId=m.scenarios.some(s=>s.id===saved.scenarioId)?saved.scenarioId:m.scenarios[0].id;
+    uiState.selected=m.nodes.find(n=>n.kind==='goal').id;
+    if(validDate(saved.asOf))uiState.asOf=saved.asOf;
+  }catch(error){uiState.persist=false;toast(`保存データを読み込めませんでした。デモを表示します。${error.message}`,true);}
+}
+function persist(){
+  if(!uiState.persist)return;
+  try{localStorage.setItem(OPTIN_KEY,'yes');localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,model:uiState.model,scenarioId:uiState.scenarioId,asOf:uiState.asOf}));}
+  catch{uiState.persist=false;try{localStorage.removeItem(OPTIN_KEY);localStorage.removeItem(STORAGE_KEY);}catch{}toast('保存できませんでした。メモリ上の変更は残っています。JSON保存をご利用ください。',true);}
+}
+function commitModel(candidate,{resetScenario=false,keepComparison=false}={}){
+  const next=validateModel(candidate); // Transaction boundary: never partially replace a valid model.
+  uiState.model=next;uiState.dirty=true;
+  if(resetScenario||!next.scenarios.some(s=>s.id===uiState.scenarioId))uiState.scenarioId=next.scenarios[0].id;
+  uiState.custom=null;
+  if(!next.nodes.some(n=>n.id===uiState.selected))uiState.selected=next.nodes.find(n=>n.kind==='goal').id;
+  if(!keepComparison)uiState.comparison=null;
+  persist();render();
+}
+function currentScenario(){return uiState.custom??uiState.scenarioId;}
+function render(){
+  analysis=analyze(uiState.model,currentScenario(),{asOf:uiState.asOf});
+  const tabs=[['overview','シナリオ分析','map'],['model','構成を編集','edit'],['checklist','確認・訓練票','list'],['guide','使い方','book']];
+  $('#app').innerHTML=`<div class="shell"><aside class="sidebar"><div><div class="brand"><span class="brand-mark">${icon('shield',26)}</span><span>BreakGlassMap<div class="brand-sub">RECOVERY READINESS</div></span></div></div><div><p class="workspace-label">WORKSPACE</p><nav aria-label="メインメニュー">${tabs.map(([tab,label,ico],i)=>`<button class="nav-item ${uiState.tab===tab?'active':''}" data-action="tab" data-tab="${tab}" ${uiState.tab===tab?'aria-current="page"':''}>${icon(ico,17)}<span>${h(label)}</span><span class="nav-num">0${i+1}</span></button>`).join('')}</nav></div><div class="sidebar-note">${icon('lock',18)}<strong>構成情報は、この端末に。</strong>外部通信・LLM呼び出しなし。資格情報の秘密値は入力しないでください。<br><br>図が成立しても、実機訓練の代わりにはなりません。</div><div class="sidebar-footer"><span>OPEN SOURCE · MIT</span><span>α 0.1.0</span></div></aside><main class="main"><header class="topbar"><div class="breadcrumb">WORKSPACE <span aria-hidden="true">/</span> RECOVERY READINESS</div><div class="top-actions"><span class="pill">LOCAL ONLY</span>${button('import','JSONを開く','upload')}${button('export-model','JSON保存','download')}<details class="menu"><summary class="button">${icon('file')}レポート</summary><div class="menu-options">${button('export-html','HTMLレポート','file','ghost')}${button('export-csv','チェックリスト CSV','list','ghost')}${button('export-result','分析結果 JSON','download','ghost')}</div></details></div></header>${uiState.tab==='overview'?overview():uiState.tab==='model'?modelView():uiState.tab==='checklist'?checklistView():guideView()}<footer class="footnote"><div class="disclaimer">${icon('shield',13)} 構成上の開始可否を点検する机上分析です。実際の復旧成功・安全性・RTO達成は保証しません。訓練記録は別に確認してください。</div><div class="privacy"><label><input id="persist-toggle" type="checkbox" ${uiState.persist?'checked':''} ${!uiState.storageAvailable?'disabled':''}>このブラウザに保存する</label><span>${!uiState.storageAvailable?'この環境では保存不可':uiState.persist?'有効（未暗号化）':'無効・メモリ上のみ'}${uiState.dirty?' / 変更あり':''}</span></div></footer></main></div>`;
+}
+function pageHead(eyebrow,title,copy){return `<section class="page-head"><div><p class="eyebrow">${h(eyebrow)}</p><h1>${h(title)}</h1><p class="subcopy">${h(copy)}</p></div><div class="head-note"><strong>${h(uiState.model.name)}</strong>${uiState.model.nodes.length}条件・操作 / ${analysis.goals.length}復旧目標<br>${uiState.persist?'ブラウザ保存 有効':'外部送信なし・自動保存なし'}</div></section>`;}
+function overview(){
+  const canTry=['offline-kit','offline-runbook'].every(id=>uiState.model.nodes.some(n=>n.id===id&&n.kind==='resource'))&&!uiState.comparison;
+  const s=analysis.summary;
+  const insightTitle=s.blocked?'復旧手順があっても、その操作を始められない条件があります。':s.unknown?'開始経路は見えてきました。残る未確認条件を確かめましょう。':'入力された条件では、すべての復旧目標に開始経路があります。';
+  return `${pageHead('TABLETOP EXERCISE','復旧の「はじめの一歩」を、確かめる。','認証・PAM・手順書が止まったとき。必要な操作を、どこから始められるかを点検します。')}<section class="panel scenario-bar"><div class="field scenario-field"><label for="scenario-select">01 / 想定する障害</label><select id="scenario-select">${uiState.model.scenarios.map(s=>`<option value="${h(s.id)}" ${s.id===uiState.scenarioId?'selected':''}>${h(s.name)}</option>`).join('')}</select></div><div class="field date-field"><label for="as-of">訓練記録の評価基準日</label><input id="as-of" type="date" value="${uiState.asOf}"></div><div class="scenario-description">${h(analysis.scenario.description||'停止条件はシナリオ全体で継続する前提です。')}</div>${button('edit-scenario','障害条件を編集','settings')}</section><section class="metrics" aria-label="復旧目標の判定">${[['ready','構成上成立','入力条件上の開始経路あり','check'],['blocked','開始不可','必要条件が成立しない','lock'],['unknown','情報不足','条件・経路の追加確認が必要','question']].map(([status,label,note,ico])=>`<article class="panel metric ${status}"><div><div class="metric-label">${h(label)}</div><div class="metric-value" data-metric="${status}">${s[status]}</div><div class="metric-note">${h(note)}</div></div><div class="metric-icon">${icon(ico,24)}</div></article>`).join('')}</section><section class="panel insight"><div><div class="insight-title">${h(insightTitle)}</div><p>${uiState.model.name.startsWith('架空例')?'架空デモ：復旧用資格情報はPAM内、オンライン手順書は認証基盤に依存しています。':'初期条件・代替経路・切り替え操作の前提を、担当者と確認してください。'}</p></div>${canTry?button('whatif','独立した復旧手段を試す','arrow','primary'):button('tab','確認事項を見る','arrow','', 'data-tab="checklist"')}</section>${comparisonHtml()}<section class="analysis-grid"><article class="panel"><header class="panel-heading"><div><h2>復旧条件マップ</h2><p>条件・操作をクリックすると、依存関係と根拠を確認できます。</p></div><div class="legend"><span><i class="dot ready"></i>成立</span><span><i class="dot blocked"></i>不可</span><span><i class="dot unknown"></i>不明</span></div></header><div class="graph-wrap">${graphHtml()}</div><div class="graph-note">矢印：必要な条件 → 依存する操作。代替経路・AND/ORの正確な条件は詳細欄を参照。</div></article><div class="stack"><article class="panel"><header class="panel-heading"><h2>復旧目標</h2><span class="pill-neutral">${analysis.goals.length} GOALS</span></header><div class="goals">${analysis.goals.map(g=>`<button class="goal-card ${uiState.selected===g.id?'selected':''}" data-action="select-node" data-id="${g.id}"><div class="goal-top"><span class="goal-name">${h(g.label)}</span>${badge(g.status)}</div><div class="goal-meta"><span>${h(g.owner||'担当未設定')}</span><span>${h(EVIDENCE_LABELS[g.evidenceStatus])}</span></div></button>`).join('')}</div></article><article class="panel">${inspectorHtml()}</article></div></section>`;
+}
+function comparisonHtml(){
+  if(!uiState.comparison)return '';
+  const before=uiState.comparison.before.summary,after=analysis.summary;
+  return `<section class="comparison"><strong>変更前との比較</strong><span>構成上成立 ${before.ready} → ${after.ready}</span><span>開始不可 ${before.blocked} → ${after.blocked}</span><span>情報不足 ${before.unknown} → ${after.unknown}</span><span>※代替手段の利用を仮定。訓練記録は変更していません。</span>${button('undo-whatif','変更前に戻す','undo','small')}</section>`;
+}
+function graphHtml(){
+  let nodes=uiState.model.nodes;
+  let truncation='';
+  if(nodes.length>70){const preferred=new Set([uiState.selected,...analysis.goals.map(n=>n.id)]);nodes=[...nodes.filter(n=>preferred.has(n.id)),...nodes.filter(n=>!preferred.has(n.id))].slice(0,70);truncation='<p class="dependency-limit">表示は70要素まで。全件の分析は構成一覧とレポートで確認できます。</p>';}
+  const groups=['resource','action','goal'].map(kind=>nodes.filter(n=>n.kind===kind));
+  const height=Math.max(410,Math.max(...groups.map(g=>g.length))*68+78);
+  const pos=new Map();groups.forEach((group,col)=>group.forEach((n,i)=>pos.set(n.id,{x:20+col*268,y:58+(group.length===1?(height-130)/2:i*(height-130)/Math.max(1,group.length-1))})));
+  const rmap=new Map(analysis.nodes.map(n=>[n.id,n]));
+  const paths=[];
+  for(const node of nodes)for(const route of node.routes??[])for(const dep of listRefs(route.requires)){
+    if(!pos.has(dep))continue;const a=pos.get(dep),b=pos.get(node.id);
+    const ax=a.x+221,ay=a.y+25,bx=b.x,by=b.y+25;
+    const path=a.x===b.x?`M${ax} ${ay} C${ax+27} ${ay},${ax+27} ${by},${ax} ${by}`:`M${ax} ${ay} C${ax+42} ${ay},${bx-42} ${by},${bx} ${by}`;
+    paths.push(`<path d="${path}" class="graph-edge ${rmap.get(dep).status==='blocked'?'is-blocked':''}" marker-end="url(#edge-arrow)"><title>${h(dep)} → ${h(node.id)} / ${h(route.label)}</title></path>`);
+  }
+  return `${truncation}<svg class="graph" viewBox="0 0 805 ${height}" role="group" aria-label="復旧条件の依存関係図"><defs><marker id="edge-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="#9aafa0"/></marker></defs>${['01 / CONDITIONS','02 / OPERATIONS','03 / GOALS'].map((s,i)=>`<text x="${20+i*268}" y="30" class="graph-lane">${s}</text>`).join('')}${paths.join('')}${nodes.map(n=>{const p=pos.get(n.id),r=rmap.get(n.id);const text=n.label.length>18?n.label.slice(0,17)+'…':n.label;return `<g class="graph-node ${uiState.selected===n.id?'selected':''}" data-action="select-node" data-id="${n.id}" role="button" tabindex="0" aria-label="${h(n.label)}：${h(STATUS_LABELS[r.status])}"><title>${h(n.label)} / ${h(STATUS_LABELS[r.status])}</title><rect x="${p.x}" y="${p.y}" width="221" height="50" rx="7"/><circle cx="${p.x+14}" cy="${p.y+18}" r="3" class="node-state ${r.status}"/><text x="${p.x+26}" y="${p.y+22}" class="node-title">${h(text)}</text><text x="${p.x+26}" y="${p.y+38}" class="node-meta">${h(KIND_LABELS[n.kind])} · ${h(n.id.length>25?n.id.slice(0,24)+'…':n.id)}</text></g>`;}).join('')}</svg>`;
+}
+function expressionHtml(expr,depth=0){
+  if(depth>8)return '<span class="help-text">深い式はモデルJSONで確認してください。</span>';
+  if(expr.ref!==undefined){const n=analysis.nodes.find(n=>n.id===expr.ref);return `<button class="dep" data-action="select-node" data-id="${h(expr.ref)}"><i class="dot ${n.status}"></i><span>${h(n.label)}</span></button>`;}
+  return `<ul class="expr"><li><span class="operator">${expr.all?'AND / すべて必要':'OR / いずれかが必要'}</span></li>${(expr.all??expr.any).map(x=>`<li>${expressionHtml(x,depth+1)}</li>`).join('')}</ul>`;
+}
+function inspectorHtml(){
+  const node=uiState.model.nodes.find(n=>n.id===uiState.selected)??uiState.model.nodes.find(n=>n.kind==='goal');
+  const result=analysis.nodes.find(n=>n.id===node.id);
+  const cycles=analysis.cycles.filter(c=>c.affectedGoals.includes(node.id)||c.nodes.includes(node.id)&&c.affectedGoals.length);
+  return `<div class="inspector"><p class="eyebrow">SELECTED CONDITION</p><div class="inspector-title"><h3>${h(node.label)}</h3>${badge(result.status)}</div><div class="metadata">${h(node.id)} · ${h(KIND_LABELS[node.kind])}<br>担当：${h(node.owner||'未設定')} / ${h(node.systemId||'SYSID未設定')}<br>訓練記録：${badge(result.evidenceStatus)} ${node.evidence.checkedAt?h(node.evidence.checkedAt):''}</div>${result.forced?`<div class="wide-note">このシナリオで${result.forced==='unavailable'?'強制停止':'状態不明'}に設定されています。ほかの経路より優先されます。</div>`:''}${node.notes?`<p class="help-text">${h(node.notes)}</p>`:''}${node.kind==='resource'?`<div class="empty-note">初期条件：${h(INITIAL_LABELS[node.initial])}<br>利用可能は入力上の申告であり、実機の確認結果ではありません。</div>`:node.routes.length?`<p class="help-text">${node.routes.length}経路のうち、いずれかが成立すれば実行可能。</p>${node.routes.map(route=>{const r=result.routes.find(x=>x.id===route.id);return `<div class="route-card"><div class="route-title"><span>${h(route.label)}</span>${badge(r.status)}</div>${expressionHtml(route.requires)}</div>`;}).join('')}`:'<div class="empty-note">開始条件・復旧経路が未定義です。自動的に成立とは扱いません。</div>'}${cycles.length?`<div class="cycle-note">循環する条件が未解決目標に関係しています。循環の外から開始できる代替手段を確認してください。</div>`:''}<div class="section-line">${button('edit-node','条件・担当・証跡を編集','edit','small',`data-id="${node.id}"`)}</div></div>`;
+}
+function modelView(){
+  return `${pageHead('MODEL WORKSPACE','復旧に必要な条件を、つなぐ。','初期条件 → 操作・能力 → 復旧目標。経路内はAND、経路間はORとして入力できます。')}<section class="panel model-info"><div><h2>${h(uiState.model.name)}</h2><p>${h(uiState.model.description||'モデルJSONから名称・説明を編集できます。')}</p></div>${button('edit-json','モデルJSON','file')}</section><div class="toolbar"><div class="group">${button('add-node','条件を追加','plus','primary','data-kind="resource"')}${button('add-node','操作を追加','plus','','data-kind="action"')}${button('add-node','目標を追加','plus','','data-kind="goal"')}</div><div class="group">${button('new-model','新規モデル','file')}${button('load-demo','架空デモを開く','map')}${button('new-scenario','シナリオ追加','plus')}</div></div><section class="panel table-wrap"><table class="data-table"><thead><tr><th>条件・操作</th><th>種類</th><th>担当 / SYSID</th><th>入力条件</th><th>現在の判定</th><th>編集</th></tr></thead><tbody>${uiState.model.nodes.map(n=>{const r=analysis.nodes.find(x=>x.id===n.id);return `<tr><td><div class="label">${h(n.label)}</div><small>${h(n.id)}</small></td><td>${h(KIND_LABELS[n.kind])}<small>${h(CATEGORY_LABELS[n.category])}</small></td><td>${h(n.owner||'未設定')}<small>${h(n.systemId||'—')}</small></td><td>${n.kind==='resource'?h(INITIAL_LABELS[n.initial]):`${n.routes.length}経路`}</td><td>${badge(r.status)}</td><td class="action-cell">${button('edit-node','編集','edit','small',`data-id="${n.id}"`)} ${button('delete-node','削除','trash','small ghost',`data-id="${n.id}"`)}</td></tr>`;}).join('')}</tbody></table></section><p class="row-count">${uiState.model.nodes.length} / ${LIMITS.nodes}要素。参照中の要素は先に経路の参照を解除してください。最終の復旧目標は削除できません。</p>`;
+}
+function checklistView(){
+  const items=analysis.checklist.filter(i=>(uiState.filter==='all'||i.priority===uiState.filter)&&(!uiState.search||[i.label,i.owner,i.systemId,i.question].join(' ').toLowerCase().includes(uiState.search.toLowerCase())));
+  return `${pageHead('ACTION & EVIDENCE','「確認したつもり」を、残さない。','構成上の詰まりと、訓練記録の不足を分けて整理します。証跡ファイルではなく参照番号・所在のみを記録してください。')}<div class="wide-note">P1：代替手段・循環・訓練失敗の見直し。P2：条件の確認。P3：訓練記録の追加・更新。優先度は作業の種類であり、事業影響のスコアではありません。</div><div class="toolbar"><div class="filter">${['all','P1','P2','P3'].map(f=>button('filter',f==='all'?'すべて':f,'',`small ${f===uiState.filter?'active':''}`,`data-filter="${f}"`)).join('')}</div><div class="group"><input class="table-search" id="check-search" type="search" placeholder="対象・担当・SYSIDで検索" aria-label="確認事項を検索" value="${h(uiState.search)}">${button('export-csv','CSVを書き出す','download')}${button('export-html','HTMLレポート','file')}</div></div><section class="panel table-wrap">${items.length?`<table class="data-table"><thead><tr><th>優先度</th><th>対象 / 担当</th><th>確認事項</th><th>証跡参照</th><th>記録</th></tr></thead><tbody>${items.map(i=>`<tr><td>${badge(i.priority==='P1'?'blocked':i.priority==='P2'?'unknown':'not-tested',i.priority)}</td><td><div class="label">${h(i.label)}</div><small>${h(i.owner||'担当未設定')} / ${h(i.systemId||'SYSID未設定')}</small></td><td>${h(i.question)}<small>${h(i.code)}</small></td><td>${h(i.evidence.reference||'—')}<small>${h(i.evidence.checkedAt||'未記録')}</small></td><td>${button('edit-node','記録','edit','small',`data-id="${i.nodeId}"`)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state">この条件に一致する確認事項はありません。入力の網羅性や実際の復旧成功を保証するものではありません。</div>'}</section><p class="row-count">${items.length}件を表示 / 全${analysis.checklist.length}件。CSVは現在のフィルターによらず全件を書き出します。</p>`;
+}
+function guideView(){
+  return `${pageHead('START HERE','障害時の「入口」から、考える。','BreakGlassMapは、復旧を実行するツールではありません。必要条件と独立した開始経路を、担当者と点検するためのOSSです。')}<div class="guide-grid"><section class="panel guide-card"><span class="guide-number">01 / FIRST RUN</span><h2>まずは架空デモで比較</h2><p>「認証基盤停止」を選ぶと、通常認証・PAM・資格情報・オンライン手順書が循環し、2つの目標が開始不可になります。</p><p>「独立した復旧手段を試す」で緊急認証手段とオフライン手順書を利用可能と仮定すると、2つの目標が構成上成立します。連絡先は未確認のままです。</p>${button('load-demo','架空デモを開く','arrow','primary')}</section><section class="panel guide-card"><span class="guide-number">02 / MODEL YOUR RECOVERY</span><h2>一つの復旧目標から登録</h2><p>「何にログインするか」「必要な回線・端末・資格情報の取得条件は何か」「手順書を読めるか」「承認者と連絡できるか」を登録します。</p><p><strong>初期条件</strong>は独立して利用可能かを申告します。依存関係のあるものは<strong>操作・能力</strong>にし、必要条件を経路として追加してください。</p>${button('new-model','新規モデルで始める','plus')}</section><section class="panel guide-card"><span class="guide-number">03 / READ THE RESULTS</span><h2>3つの判定と、別軸の訓練記録</h2><p>${badge('ready')} 入力された既知の条件から開始経路が成立。実機確認済みという意味ではありません。</p><p>${badge('unknown')} 未確認の初期条件、または未定義の経路が必要です。</p><p>${badge('blocked')} 不明条件を成立すると仮定しても、開始経路が見つかりません。</p><p>成功・失敗・日付・確認者・証跡参照・シナリオ範囲を別に記録します。構成と指定シナリオに紐付けた記録は、条件変更時に再確認が必要になります。保存した参照先や記録の真正性は検証しません。</p></section><section class="panel guide-card"><span class="guide-number">04 / MODEL LIMITS</span><h2>停止条件と復旧操作を混同しない</h2><p>シナリオの「強制停止」は、その条件が分析中ずっと失われる前提です。回復させる場合は、復旧操作とその後の利用能力を別ノードにして経路を明示します。</p><p>複数経路はOR、各経路内の必要条件はAND。JSONでは入れ子の<code>all</code> / <code>any</code> / <code>ref</code>も利用できます。</p><p>時間・順序制約・作業の競合・RTO・費用・実システムの状態は扱いません。表示する段階は論理上の依存順序です。</p></section><section class="panel guide-card"><span class="guide-number">05 / LOCAL & PRIVATE</span><h2>外部送信なし、保存は明示的に</h2><p>このHTMLだけで動作します。サーバー、LLM、外部API、CDNは不要です。既定はメモリ上のみ。再読み込み前にJSON保存してください。</p><p>ブラウザ保存と書き出しファイルは未暗号化です。パスワード・秘密鍵・トークンは入力せず、実際の構成情報も承認された場所に保管してください。</p><p>会社のブラウザ制約でHTMLを直接開けない場合、ソース一式の<code>npm start</code>でループバックのローカルHTTPを利用できます。</p></section><section class="panel guide-card"><span class="guide-number">06 / CLI & OPEN SOURCE</span><h2>レビュー・CIでも同じエンジン</h2><p>ソース一式にはCLI、JSONモデル例、スキーマ、テスト、英語・日本語READMEが含まれます。Node.js 22以上でパッケージの追加インストールなしに利用できます。</p><p><code>node bin/breakglassmap.mjs analyze examples/identity-outage.json --scenario identity-outage</code></p><p>出口コードは、入力エラー1、開始不可2、情報不足3、証跡ゲート4。<code>--fail-on none</code>でレポートのみ生成できます。</p><p>MIT License · v0.1.0-alpha.1。製品・クラウドの実仕様を自動検証するものではありません。</p></section></div>`;
+}
+
+function openNode(id,kind='resource'){
+  const existing=uiState.model.nodes.find(n=>n.id===id);
+  editingNode={originalId:existing?.id??null,draft:existing?structuredClone(existing):{id:`${kind}-${Date.now().toString(36)}`,label:'',kind,category:'other',owner:'',systemId:'',notes:'',evidence:{status:'not-tested',scope:uiState.scenarioId,maxAgeDays:90},...(kind==='resource'?{initial:'unknown'}:{routes:[]})}};
+  renderNodeDialog();$('#node-dialog').showModal();
+}
+function flatRefs(expr){if(expr.ref!==undefined)return [expr.ref];if(expr.all?.every(x=>x.ref!==undefined))return expr.all.map(x=>x.ref);return null;}
+function renderNodeDialog(){
+  const n=editingNode.draft,e=n.evidence??{status:'not-tested'},d=$('#node-dialog');
+  d.innerHTML=`<form id="node-form"><header class="dialog-header"><div><p class="eyebrow">${editingNode.originalId?'EDIT CONDITION':'ADD CONDITION'}</p><h2 id="node-dialog-title">${h(KIND_LABELS[n.kind])}を${editingNode.originalId?'編集':'追加'}</h2></div>${button('close-dialog','閉じる','close','ghost','data-dialog="node-dialog"')}</header><div class="dialog-body"><div class="form-grid"><div class="field"><label for="node-id">ID（英数字・ハイフン等）</label><input id="node-id" name="id" value="${h(n.id)}" ${editingNode.originalId?'readonly':''} maxlength="64" required></div><div class="field"><label for="node-label">表示名</label><input id="node-label" name="label" value="${h(n.label)}" maxlength="120" required></div><div class="field"><label for="node-category">分類</label><select id="node-category" name="category">${CATEGORIES.map(c=>`<option value="${c}" ${c===n.category?'selected':''}>${h(CATEGORY_LABELS[c])}</option>`).join('')}</select></div>${n.kind==='resource'?`<div class="field"><label for="node-initial">独立した初期条件の状態</label><select id="node-initial" name="initial">${Object.entries(INITIAL_LABELS).map(([s,l])=>`<option value="${s}" ${s===n.initial?'selected':''}>${h(l)}</option>`).join('')}</select></div>`:'<div class="field"><span class="field-label">種類</span><span class="help-text">経路が未定義なら情報不足。<br>成立する経路が1つでもあれば実行可能。</span></div>'}<div class="field"><label for="node-owner">担当（部署・役割）</label><input id="node-owner" name="owner" value="${h(n.owner)}" maxlength="160"></div><div class="field"><label for="node-system">SYSID / 管理番号</label><input id="node-system" name="systemId" value="${h(n.systemId)}" maxlength="120"></div><div class="field span-2"><label for="node-notes">確認上の補足（秘密値は入力しない）</label><textarea id="node-notes" name="notes" maxlength="2000">${h(n.notes)}</textarea></div></div>${n.kind!=='resource'?`<div class="section-line"><h3>復旧経路（経路間はOR）</h3>${button('add-route','経路を追加','plus','small')}</div><p class="help-text">チェックした条件はすべて必要（AND）。別の方法がある場合は新しい経路に分けてください。切り替え操作自体に必要な条件も含めます。</p>${n.routes.length?n.routes.map((r,index)=>{const refs=flatRefs(r.requires);return `<fieldset class="route-editor"><legend>経路 ${index+1}</legend><div class="route-editor-header"><input name="route-label-${index}" aria-label="経路${index+1}の名前" value="${h(r.label)}" maxlength="160">${button('remove-route','経路を削除','trash','small ghost',`data-index="${index}"`)}</div>${refs!==null?`<div class="check-grid">${uiState.model.nodes.map(candidate=>`<label class="check-label"><input type="checkbox" name="route-ref-${index}" value="${candidate.id}" ${refs.includes(candidate.id)?'checked':''}>${h(candidate.label)}${candidate.id===n.id?'（自分自身）':''}</label>`).join('')}</div>`:`<p class="help-text">入れ子の条件式です。式を保持してJSONで編集します。</p><textarea class="json-editor" name="route-expr-${index}" aria-label="経路${index+1}の条件式">${h(JSON.stringify(r.requires,null,2))}</textarea>`}</fieldset>`;}).join(''):'<div class="empty-note">まだ経路がありません。保存した場合は情報不足として判定します。</div>'}`:''}<div class="section-line"><h3>訓練・確認の記録（構成判定とは別）</h3></div><p class="help-text">成功記録には日付・確認者・証跡参照・シナリオIDが必要です。機器への接続や証跡の検証はしません。</p><div class="form-grid"><div class="field"><label for="evidence-status">結果</label><select id="evidence-status" name="ev-status">${[['not-tested','未訓練'],['passed','指定範囲の確認に成功'],['failed','失敗']].map(([v,l])=>`<option value="${v}" ${e.status===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label for="evidence-date">確認日</label><input id="evidence-date" type="date" name="ev-date" value="${h(e.checkedAt||'')}"></div><div class="field"><label for="evidence-reviewer">確認者</label><input id="evidence-reviewer" name="ev-reviewer" value="${h(e.reviewer||'')}" maxlength="160"></div><div class="field"><label for="evidence-ref">証跡の参照番号・所在</label><input id="evidence-ref" name="ev-reference" value="${h(e.reference||'')}" maxlength="500"></div><div class="field"><label for="evidence-scope">検証したシナリオID</label><input id="evidence-scope" name="ev-scope" value="${h(e.scope||uiState.scenarioId)}" maxlength="160"></div><div class="field"><label for="evidence-age">再確認までの日数</label><input id="evidence-age" type="number" min="1" max="3650" name="ev-age" value="${e.maxAgeDays??90}"></div><div class="field span-2"><label class="check-label"><input type="checkbox" name="ev-bind" id="evidence-bind">今回の構成・指定シナリオで確認した記録として紐付ける</label><span class="help-text">実際に確認済みの場合のみ選択。構成・障害条件が変わると再確認が必要になります。これは証跡の真正性を保証する署名ではありません。</span></div><div class="field span-2"><label for="evidence-notes">検証範囲・結果の補足</label><textarea id="evidence-notes" name="ev-notes" maxlength="1000">${h(e.notes||'')}</textarea></div></div></div><footer class="dialog-footer"><span class="help-text">秘密情報は入力しないでください。</span><div class="group">${button('close-dialog','キャンセル','','','data-dialog="node-dialog"')}<button type="submit" class="button primary">変更を適用</button></div></footer></form>`;
+}
+function captureNode(){
+  const f=new FormData($('#node-form')),n=structuredClone(editingNode.draft);
+  for(const k of ['id','label','category','owner','systemId','notes'])n[k]=String(f.get(k)??'');
+  if(n.kind==='resource')n.initial=String(f.get('initial'));
+  else n.routes=n.routes.map((route,i)=>{
+    const json=f.get(`route-expr-${i}`);let expr;
+    if(json!==null){try{expr=JSON.parse(String(json));}catch{throw new Error(`経路${i+1}の条件式が正しいJSONではありません。`);}}
+    else expr={all:f.getAll(`route-ref-${i}`).map(id=>({ref:String(id)}))};
+    return {...route,label:String(f.get(`route-label-${i}`)??''),requires:expr};
+  });
+  n.evidence={status:String(f.get('ev-status')),scope:String(f.get('ev-scope')??''),reviewer:String(f.get('ev-reviewer')??''),reference:String(f.get('ev-reference')??''),maxAgeDays:Number(f.get('ev-age')),notes:String(f.get('ev-notes')??'')};
+  if(editingNode.draft.evidence?.conditionHash)n.evidence.conditionHash=editingNode.draft.evidence.conditionHash;
+  if(f.get('ev-date'))n.evidence.checkedAt=String(f.get('ev-date'));
+  return n;
+}
+function saveNode(){
+  const nextNode=captureNode(),m=structuredClone(uiState.model);
+  if(editingNode.originalId)m.nodes[m.nodes.findIndex(n=>n.id===editingNode.originalId)]=nextNode;else m.nodes.push(nextNode);
+  if($('#evidence-bind').checked&&nextNode.evidence.status!=='not-tested'){
+    const scenario=m.scenarios.find(s=>s.id===nextNode.evidence.scope);
+    if(!scenario)throw new Error('紐付けるシナリオIDが存在しません。既存シナリオのIDを指定してください。');
+    nextNode.evidence.conditionHash=conditionFingerprint(validateModel(m),scenario);
+  }
+  const validated=validateModel(m);
+  uiState.selected=nextNode.id;commitModel(validated);$('#node-dialog').close();toast('条件と記録を更新しました。構成上の判定と訓練記録は別に扱います。');
+}
+function openScenario(isNew=false){
+  const original=isNew?null:uiState.model.scenarios.find(s=>s.id===uiState.scenarioId);
+  editingScenario={originalId:original?.id??null};
+  const s=original??{id:`scenario-${Date.now().toString(36)}`,name:'新しい障害シナリオ',description:'',unavailable:[],unknown:[]};
+  $('#scenario-dialog').innerHTML=`<form id="scenario-form"><header class="dialog-header"><div><p class="eyebrow">OUTAGE CONDITIONS</p><h2 id="scenario-dialog-title">障害条件を編集</h2></div>${button('close-dialog','閉じる','close','ghost','data-dialog="scenario-dialog"')}</header><div class="dialog-body"><div class="form-grid"><div class="field"><label for="scenario-id">シナリオID</label><input id="scenario-id" name="id" value="${h(s.id)}" ${original?'readonly':''} required maxlength="64"></div><div class="field"><label for="scenario-name">表示名</label><input id="scenario-name" name="name" value="${h(s.name)}" required maxlength="160"></div><div class="field span-2"><label for="scenario-description">想定する障害・範囲</label><textarea id="scenario-description" name="description" maxlength="2000">${h(s.description)}</textarea></div></div><div class="wide-note">強制停止はシナリオ全体で優先されます。停止中の要素を復旧する場合、復旧操作と復旧後の能力を別ノードで表現してください。</div>${uiState.model.nodes.map(n=>`<div class="scenario-row"><label for="override-${n.id}">${h(n.label)}<small>${h(n.id)} / ${h(KIND_LABELS[n.kind])}</small></label><select id="override-${n.id}" name="override-${n.id}"><option value="unchanged" ${!s.unavailable.includes(n.id)&&!s.unknown.includes(n.id)?'selected':''}>元の条件を使用</option><option value="unavailable" ${s.unavailable.includes(n.id)?'selected':''}>強制停止</option><option value="unknown" ${s.unknown.includes(n.id)?'selected':''}>状態不明</option></select></div>`).join('')}</div><footer class="dialog-footer"><span class="help-text">実際のシステムは操作しません。</span><div class="group">${original?button('delete-scenario','シナリオ削除','trash','danger small'):''}<button type="submit" class="button primary">シナリオを適用</button></div></footer></form>`;
+  $('#scenario-dialog').showModal();
+}
+function saveScenario(){
+  const f=new FormData($('#scenario-form')),s={id:String(f.get('id')),name:String(f.get('name')),description:String(f.get('description')),unavailable:[],unknown:[]};
+  for(const n of uiState.model.nodes){const override=f.get(`override-${n.id}`);if(override==='unavailable'||override==='unknown')s[override].push(n.id);}
+  const m=structuredClone(uiState.model);if(editingScenario.originalId)m.scenarios[m.scenarios.findIndex(x=>x.id===editingScenario.originalId)]=s;else m.scenarios.push(s);
+  validateModel(m);uiState.scenarioId=s.id;commitModel(m);$('#scenario-dialog').close();toast('障害条件を更新し、再評価しました。');
+}
+function openJson(){
+  $('#json-dialog').innerHTML=`<header class="dialog-header"><div><p class="eyebrow">VERSIONED MODEL / JSON</p><h2 id="json-dialog-title">モデルJSON</h2></div>${button('close-dialog','閉じる','close','ghost','data-dialog="json-dialog"')}</header><div class="dialog-body"><p class="help-text">入れ子のAND/ORやモデル名を編集できます。不正な入力は適用せず、元のモデルを保持します。</p><textarea id="json-text" class="json-editor" aria-label="モデルJSONの内容" spellcheck="false">${h(JSON.stringify(uiState.model,null,2))}</textarea></div><footer class="dialog-footer"><span class="help-text">上限1 MiB / 250要素 / 資格情報は入力しない</span>${button('apply-json','JSONを適用','check','primary')}</footer>`;
+  $('#json-dialog').showModal();
+}
+function exportFile(name,text,type){
+  const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
+function confirmReplace(){return !uiState.dirty||confirm('メモリ上のモデルを置き換えます。必要な変更は先にJSON保存してください。続けますか？');}
+function handleAction(action,el){
+  if(action==='tab'){uiState.tab=el.dataset.tab;render();return;}
+  if(action==='select-node'){uiState.selected=el.dataset.id;render();return;}
+  if(action==='import'){$('#import-file').click();return;}
+  if(action==='export-model'){exportFile('breakglassmap-model.json',JSON.stringify(uiState.model,null,2),'application/json');toast('モデルJSONを書き出しました。構成情報を含むため、保管先に注意してください。');return;}
+  if(action==='export-result'){exportFile('breakglassmap-analysis.json',JSON.stringify(analysis,null,2),'application/json');return;}
+  if(action==='export-csv'){exportFile('breakglassmap-checklist.csv',toCsv(uiState.model,analysis),'text/csv;charset=utf-8');return;}
+  if(action==='export-html'){exportFile('breakglassmap-report.html',toHtml(uiState.model,analysis),'text/html;charset=utf-8');return;}
+  if(action==='whatif'){
+    const m=structuredClone(uiState.model);uiState.comparison={model:structuredClone(m),scenarioId:uiState.scenarioId,before:structuredClone(analysis)};
+    for(const id of ['offline-kit','offline-runbook'])m.nodes.find(n=>n.id===id).initial='available';
+    commitModel(m,{keepComparison:true});toast('独立した手段を「利用可能」と仮定しました。実機確認や訓練記録は変更していません。');return;
+  }
+  if(action==='undo-whatif'){const previous=uiState.comparison;uiState.scenarioId=previous.scenarioId;commitModel(previous.model);toast('変更前のモデルに戻しました。');return;}
+  if(action==='load-demo'||action==='new-model'){
+    if(!confirmReplace())return;
+    uiState.tab=action==='load-demo'?'overview':'model';uiState.selected=action==='load-demo'?'goal-identity':'goal-1';commitModel(action==='load-demo'?structuredClone(DEMO):emptyModel(),{resetScenario:true});return;
+  }
+  if(action==='edit-node'){openNode(el.dataset.id);return;}
+  if(action==='add-node'){openNode(null,el.dataset.kind);return;}
+  if(action==='delete-node'){
+    const id=el.dataset.id,refs=uiState.model.nodes.filter(n=>(n.routes??[]).some(r=>listRefs(r.requires).includes(id)));
+    if(refs.length)throw new Error(`他の経路から参照されています：${refs.map(n=>n.label).join('、')}。先に参照を解除してください。`);
+    if(!confirm('この要素と対応する訓練記録を削除しますか？'))return;
+    const m=structuredClone(uiState.model);m.nodes=m.nodes.filter(n=>n.id!==id);for(const s of m.scenarios){s.unavailable=s.unavailable.filter(x=>x!==id);s.unknown=s.unknown.filter(x=>x!==id);}commitModel(m);return;
+  }
+  if(action==='close-dialog'){$(`#${el.dataset.dialog}`).close();return;}
+  if(action==='add-route'){editingNode.draft=captureNode();if(editingNode.draft.routes.length>=LIMITS.routes)throw new Error('経路は16件までです。');editingNode.draft.routes.push({id:`route-${Date.now().toString(36)}`,label:`代替経路 ${editingNode.draft.routes.length+1}`,requires:{all:[]}});renderNodeDialog();return;}
+  if(action==='remove-route'){editingNode.draft=captureNode();editingNode.draft.routes.splice(Number(el.dataset.index),1);renderNodeDialog();return;}
+  if(action==='edit-scenario'||action==='new-scenario'){openScenario(action==='new-scenario');return;}
+  if(action==='delete-scenario'){
+    if(uiState.model.scenarios.length===1)throw new Error('少なくとも1つのシナリオを残してください。');
+    if(!confirm('このシナリオを削除しますか？対応する訓練記録の範囲は自動変更しません。'))return;
+    const m=structuredClone(uiState.model);m.scenarios=m.scenarios.filter(s=>s.id!==editingScenario.originalId);commitModel(m,{resetScenario:true});$('#scenario-dialog').close();return;
+  }
+  if(action==='edit-json'){openJson();return;}
+  if(action==='apply-json'){const m=parseModel($('#json-text').value);commitModel(m);$('#json-dialog').close();toast('モデルJSONを適用しました。');return;}
+  if(action==='filter'){uiState.filter=el.dataset.filter;render();return;}
+}
+// Event delegation keeps rendering deterministic. No user text is executable markup.
+document.addEventListener('click',event=>{
+  const el=event.target.closest('[data-action]');if(!el)return;
+  try{handleAction(el.dataset.action,el);}catch(error){toast(error.message,true);}
+});
+document.addEventListener('keydown',event=>{
+  if((event.key==='Enter'||event.key===' ')&&event.target.matches('g[role="button"]')){event.preventDefault();event.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}
+});
+document.addEventListener('submit',event=>{
+  // Form controls named `id` shadow HTMLFormElement.id; read the attribute.
+  const formId=event.target.getAttribute('id');
+  if(!['node-form','scenario-form'].includes(formId))return;event.preventDefault();
+  try{if(formId==='node-form')saveNode();else saveScenario();}catch(error){toast(error.message,true);}
+});
+document.addEventListener('change',event=>{
+  try{
+    if(event.target.id==='scenario-select'){uiState.scenarioId=event.target.value;uiState.custom=null;uiState.comparison=null;persist();render();}
+    if(event.target.id==='as-of'){if(!validDate(event.target.value))throw new Error('評価基準日を入力してください。');uiState.asOf=event.target.value;persist();render();}
+    if(event.target.id==='persist-toggle'){
+      if(event.target.checked){uiState.persist=true;persist();toast('このブラウザに構成情報を未暗号化で保存します。共有端末では利用しないでください。');}
+      else{uiState.persist=false;try{localStorage.removeItem(OPTIN_KEY);localStorage.removeItem(STORAGE_KEY);}catch{}toast('このアプリのブラウザ保存データを削除しました。メモリ上のモデルは残ります。');}render();
+    }
+  }catch(error){toast(error.message,true);render();}
+});
+document.addEventListener('input',event=>{
+  if(event.target.id==='check-search'){const position=event.target.selectionStart;uiState.search=event.target.value;render();const input=$('#check-search');input.focus();if(position!==null)input.setSelectionRange(position,position);}
+});
+$('#import-file').addEventListener('change',async event=>{
+  const file=event.target.files?.[0];if(!file)return;
+  try{if(file.size>LIMITS.bytes)throw new Error('入力ファイルは1 MiB以下にしてください。');const candidate=parseModel(await file.text());if(!confirmReplace())return;commitModel(candidate,{resetScenario:true});toast('JSONモデルを読み込みました。内容は外部送信していません。');}
+  catch(error){toast(`読み込みを中止しました：${error.message}`,true);}finally{event.target.value='';}
+});
+restoreStored();
+render();
+
+return {};
+})();</script>
+</body>
+</html>

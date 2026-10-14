@@ -1,0 +1,21 @@
+{
+  "name": "breakglassmap",
+  "version": "0.1.0-alpha.1",
+  "description": "Find the recovery dependencies that lock you out when identity, PAM or runbooks fail.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "breakglassmap": "bin/breakglassmap.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/serve.mjs",
+    "check": "npm run build && npm test",
+    "demo": "node bin/breakglassmap.mjs analyze examples/identity-outage.json --scenario identity-outage"
+  }
+}

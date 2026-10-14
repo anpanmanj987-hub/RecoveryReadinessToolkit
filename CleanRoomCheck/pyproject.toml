@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cleanroomcheck"
+version = "0.1.0a1"
+description = "Offline, evidence-aware review of isolated recovery environments under cloud tenant compromise"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "CleanRoomCheck contributors"}]
+dependencies = []
+keywords = ["cyber-recovery", "clean-room", "cloud-security", "backup", "resilience"]
+classifiers = ["Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "Topic :: Security", "Operating System :: OS Independent"]
+
+[project.optional-dependencies]
+yaml = ["PyYAML>=6.0.2,<7"]
+
+[project.scripts]
+cleanroomcheck = "cleanroomcheck.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cleanroomcheck*"]
+exclude = ["tests*", "tools*"]
+
+[tool.setuptools.package-data]
+cleanroomcheck = ["data/*.json", "data/examples/*.json", "web/*.html", "web/*.css", "web/*.js"]

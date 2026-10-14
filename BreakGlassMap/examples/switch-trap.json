@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "name": "架空例 / The switching trap",
+  "description": "特定製品の実仕様ではありません。代替手段が存在していても、障害後の切り替え操作に通常認証が必要な場合の架空例。パスワード等の秘密値は含みません。",
+  "nodes": [
+    {
+      "id": "identity-health",
+      "label": "通常認証基盤",
+      "kind": "resource",
+      "category": "identity",
+      "initial": "available",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "backup-line",
+      "label": "独立したBCP回線",
+      "kind": "resource",
+      "category": "network",
+      "initial": "available",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "local-credential",
+      "label": "独立した資格情報の取得手段",
+      "kind": "resource",
+      "category": "credential",
+      "initial": "available",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "offline-runbook",
+      "label": "オフライン手順書",
+      "kind": "resource",
+      "category": "document",
+      "initial": "available",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "preconfigured",
+      "label": "障害前に代替経路を利用可能に準備済み",
+      "kind": "resource",
+      "category": "system",
+      "initial": "unavailable",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "normal-login",
+      "label": "通常の管理者ログイン",
+      "kind": "action",
+      "routes": [
+        {
+          "id": "normal",
+          "label": "通常認証と回線",
+          "requires": {
+            "all": [
+              {
+                "ref": "identity-health"
+              },
+              {
+                "ref": "backup-line"
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "enable-local",
+      "label": "代替経路を利用可能にする",
+      "kind": "action",
+      "routes": [
+        {
+          "id": "switch",
+          "label": "通常の管理者セッションで切り替える",
+          "requires": {
+            "all": [
+              {
+                "ref": "normal-login"
+              },
+              {
+                "ref": "offline-runbook"
+              }
+            ]
+          }
+        },
+        {
+          "id": "prepared",
+          "label": "障害前に準備した経路を使う",
+          "requires": {
+            "all": [
+              {
+                "ref": "preconfigured"
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "local-login",
+      "label": "独立した代替ログイン",
+      "kind": "action",
+      "routes": [
+        {
+          "id": "local",
+          "label": "経路・取得手段・回線",
+          "requires": {
+            "all": [
+              {
+                "ref": "enable-local"
+              },
+              {
+                "ref": "local-credential"
+              },
+              {
+                "ref": "backup-line"
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "goal-admin",
+      "label": "復旧用の管理者アクセスを開始",
+      "kind": "goal",
+      "routes": [
+        {
+          "id": "normal",
+          "label": "通常経路",
+          "requires": {
+            "all": [
+              {
+                "ref": "normal-login"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fallback",
+          "label": "代替経路",
+          "requires": {
+            "all": [
+              {
+                "ref": "local-login"
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": {
+        "status": "not-tested"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "identity-outage",
+      "name": "認証基盤停止",
+      "unavailable": [
+        "identity-health"
+      ],
+      "unknown": []
+    }
+  ]
+}

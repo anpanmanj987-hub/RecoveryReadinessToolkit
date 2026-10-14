@@ -1,0 +1,19 @@
+{
+  "mode": "offline DOM component test with local Python engine adapter; not native HTTP E2E",
+  "checks_passed": 11,
+  "checks": [
+    "Offline component bootstrap and packaged templates",
+    "Risky demo renders 35 failed and 36 unknown",
+    "HTML Blob generation (native download intentionally not exercised)",
+    "Form edit invalidates old results and recomputes",
+    "Improved design keeps 39 unresolved checks visible",
+    "Advanced JSON duplicate-key and dirty-state guards",
+    "Self-reported evidence cannot yield a positive result",
+    "Stale in-flight evaluation responses discarded",
+    "Standalone report inline-script CSP, filters and expansion",
+    "Responsive 390px layout without page-wide overflow",
+    "No JavaScript errors or browser network requests in component harness"
+  ],
+  "javascript_errors": [],
+  "browser_network_requests": []
+}

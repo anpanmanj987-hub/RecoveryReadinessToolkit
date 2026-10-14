@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {analyze} from '../src/engine.mjs';
+import {toCsv,toHtml,toText} from '../src/report.mjs';
+const m={schemaVersion:1,name:'<img src=x onerror=alert(1)>',nodes:[{id:'r',kind:'resource',label:'=HYPERLINK("https://invalid.example")',initial:'unknown',owner:'\t=1+1'},{id:'g',label:'復旧する',kind:'goal',routes:[{id:'r1',label:'<script>alert(1)</script>',requires:{ref:'r'}}]}]};
+const a=()=>analyze(m,'baseline',{asOf:'2026-10-13'});
+test('CSV has BOM, quoted cells and neutralizes formula prefixes',()=>{const csv=toCsv(m,a());assert.ok(csv.startsWith('\uFEFF'));assert.match(csv,/'=HYPERLINK/);assert.match(csv,/'\t=1\+1/);});
+test('HTML escapes all untrusted markup',()=>{const html=toHtml(m,a());assert.ok(!html.includes('<img src=x'));assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;img'));assert.ok(html.includes('Content-Security-Policy'));});
+test('HTML makes uncertainty and model-only limitations visible',()=>{const html=toHtml(m,a());assert.match(html,/情報不足/);assert.match(html,/保証/);assert.match(html,/baseline/);});
+test('text includes scenario, result and limitations',()=>{const text=toText(m,a());assert.match(text,/baseline/);assert.match(text,/情報不足/);assert.match(text,/保証/);});

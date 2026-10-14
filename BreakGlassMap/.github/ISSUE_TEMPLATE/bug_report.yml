@@ -1,0 +1,32 @@
+name: Bug report
+description: Report incorrect analysis, editing or export behavior.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include production topology, credentials or personal data. For security issues, read SECURITY.md first."
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal fictional JSON / steps to reproduce
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version, OS, browser or Node version
+    validations:
+      required: true
+  - type: checkboxes
+    id: sanitized
+    attributes:
+      label: Data safety
+      options:
+        - label: I used only fictional or fully sanitized data, without credentials or customer identifiers.
+          required: true

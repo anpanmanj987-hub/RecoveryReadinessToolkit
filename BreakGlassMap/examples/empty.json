@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "新しい復旧モデル",
+  "description": "",
+  "nodes": [
+    {
+      "id": "goal-1",
+      "label": "最初の復旧目標",
+      "kind": "goal",
+      "category": "system",
+      "routes": [],
+      "owner": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "baseline",
+      "name": "通常時の前提確認",
+      "unavailable": [],
+      "unknown": []
+    }
+  ]
+}

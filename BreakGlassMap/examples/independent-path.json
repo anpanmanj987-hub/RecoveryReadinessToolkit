@@ -1,0 +1,439 @@
+{
+  "schemaVersion": 1,
+  "name": "架空例 / Independent Recovery Path",
+  "description": "製品の実仕様ではなく、循環する復旧条件を説明するための架空構成です。実環境の証跡・資格情報は含みません。IdP停止時、資格情報はPAM内、手順書はSSO配下。独立手段の有無で開始可否が変わります。",
+  "nodes": [
+    {
+      "id": "idp-health",
+      "label": "通常認証サービス",
+      "kind": "resource",
+      "category": "identity",
+      "initial": "available",
+      "owner": "認証チーム",
+      "notes": "障害シナリオでは停止したまま。復旧後の利用は「認証基盤の復旧操作」を別経路として表現。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "maintenance-net",
+      "label": "独立した保守回線",
+      "kind": "resource",
+      "category": "network",
+      "initial": "available",
+      "owner": "NWチーム",
+      "notes": "モデル上の申告。回線の共通障害要因は別途点検。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "admin-device",
+      "label": "管理用端末",
+      "kind": "resource",
+      "category": "system",
+      "initial": "available",
+      "owner": "運用チーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "oncall",
+      "label": "当番・承認者の確保",
+      "kind": "resource",
+      "category": "people",
+      "initial": "available",
+      "owner": "運用責任者",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "offline-kit",
+      "label": "独立した緊急認証手段",
+      "kind": "resource",
+      "category": "credential",
+      "initial": "available",
+      "owner": "認証チーム",
+      "notes": "鍵・パスワードそのものは保存しない。強い認証、独立した利用条件、承認・監査を備えた手段を別途設計。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "offline-runbook",
+      "label": "オフライン手順書",
+      "kind": "resource",
+      "category": "document",
+      "initial": "available",
+      "owner": "BCPチーム",
+      "notes": "実行に必要な手順が、停止する認証に依存せず参照可能か。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "backup-media",
+      "label": "復元用バックアップ",
+      "kind": "resource",
+      "category": "system",
+      "initial": "available",
+      "owner": "バックアップ担当",
+      "notes": "ファイルの存在だけで整合性・復元成功を保証するものではない。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "hotline",
+      "label": "独立した緊急連絡先",
+      "kind": "resource",
+      "category": "people",
+      "initial": "unknown",
+      "owner": "BCPチーム",
+      "notes": "当該障害条件でも連絡可能か未確認。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "cloud-login",
+      "label": "管理者の認証",
+      "kind": "action",
+      "category": "identity",
+      "routes": [
+        {
+          "id": "normal",
+          "label": "通常認証",
+          "requires": {
+            "all": [
+              {
+                "ref": "idp-health"
+              },
+              {
+                "ref": "maintenance-net"
+              },
+              {
+                "ref": "admin-device"
+              }
+            ]
+          }
+        },
+        {
+          "id": "restored",
+          "label": "復旧した認証基盤を使う",
+          "requires": {
+            "all": [
+              {
+                "ref": "recover-idp"
+              },
+              {
+                "ref": "maintenance-net"
+              },
+              {
+                "ref": "admin-device"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "認証チーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "pam-login",
+      "label": "PAMにログイン",
+      "kind": "action",
+      "category": "identity",
+      "routes": [
+        {
+          "id": "normal",
+          "label": "SSO経由",
+          "requires": {
+            "all": [
+              {
+                "ref": "cloud-login"
+              },
+              {
+                "ref": "maintenance-net"
+              }
+            ]
+          }
+        },
+        {
+          "id": "independent",
+          "label": "独立した緊急アクセス経由",
+          "requires": {
+            "all": [
+              {
+                "ref": "offline-kit"
+              },
+              {
+                "ref": "maintenance-net"
+              },
+              {
+                "ref": "admin-device"
+              },
+              {
+                "ref": "oncall"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "PAMチーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "recovery-secret",
+      "label": "復旧用資格情報の取得",
+      "kind": "action",
+      "category": "credential",
+      "routes": [
+        {
+          "id": "vault",
+          "label": "PAM内から取得",
+          "requires": {
+            "all": [
+              {
+                "ref": "pam-login"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "PAMチーム",
+      "notes": "取得できる条件のみ記録。秘密値は一切入力しない。",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "read-runbook",
+      "label": "復旧手順書の参照",
+      "kind": "action",
+      "category": "document",
+      "routes": [
+        {
+          "id": "online",
+          "label": "SSO配下のオンライン版",
+          "requires": {
+            "all": [
+              {
+                "ref": "cloud-login"
+              }
+            ]
+          }
+        },
+        {
+          "id": "offline",
+          "label": "独立したオフライン版",
+          "requires": {
+            "all": [
+              {
+                "ref": "offline-runbook"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "BCPチーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "recover-idp",
+      "label": "認証基盤の復旧操作",
+      "kind": "action",
+      "category": "system",
+      "routes": [
+        {
+          "id": "recovery",
+          "label": "資格情報・手順・作業環境が必要",
+          "requires": {
+            "all": [
+              {
+                "ref": "recovery-secret"
+              },
+              {
+                "ref": "read-runbook"
+              },
+              {
+                "ref": "maintenance-net"
+              },
+              {
+                "ref": "admin-device"
+              },
+              {
+                "ref": "oncall"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "認証チーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "backup-console",
+      "label": "復元コンソールへのアクセス",
+      "kind": "action",
+      "category": "system",
+      "routes": [
+        {
+          "id": "pam",
+          "label": "PAMと手順書が必要",
+          "requires": {
+            "all": [
+              {
+                "ref": "pam-login"
+              },
+              {
+                "ref": "read-runbook"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "バックアップ担当",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    },
+    {
+      "id": "goal-identity",
+      "label": "認証復旧の作業を開始",
+      "kind": "goal",
+      "category": "system",
+      "routes": [
+        {
+          "id": "start",
+          "label": "復旧操作の前提が成立",
+          "requires": {
+            "all": [
+              {
+                "ref": "recover-idp"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "認証チーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      },
+      "systemId": "DEMO-ID-01"
+    },
+    {
+      "id": "goal-restore",
+      "label": "業務データの復元を開始",
+      "kind": "goal",
+      "category": "system",
+      "routes": [
+        {
+          "id": "start",
+          "label": "コンソール・媒体・当番が必要",
+          "requires": {
+            "all": [
+              {
+                "ref": "backup-console"
+              },
+              {
+                "ref": "backup-media"
+              },
+              {
+                "ref": "oncall"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "バックアップ担当",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      },
+      "systemId": "DEMO-APP-01"
+    },
+    {
+      "id": "goal-notify",
+      "label": "障害時の連絡を開始",
+      "kind": "goal",
+      "category": "people",
+      "routes": [
+        {
+          "id": "contact",
+          "label": "独立した連絡先と当番",
+          "requires": {
+            "all": [
+              {
+                "ref": "hotline"
+              },
+              {
+                "ref": "oncall"
+              }
+            ]
+          }
+        }
+      ],
+      "owner": "BCPチーム",
+      "notes": "",
+      "evidence": {
+        "status": "not-tested"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "identity-outage",
+      "name": "認証基盤停止",
+      "description": "通常認証サービスが利用できない状態。代替アクセスの入口と手順書の所在を確認する。",
+      "unavailable": [
+        "idp-health"
+      ],
+      "unknown": []
+    },
+    {
+      "id": "baseline",
+      "name": "通常時の前提確認",
+      "description": "強制停止なし。利用可能と申告した初期条件を前提にする。",
+      "unavailable": [],
+      "unknown": []
+    },
+    {
+      "id": "network-outage",
+      "name": "保守回線停止",
+      "description": "保守回線をシナリオ全体で停止させる。別回線を使う場合は別条件として追加する。",
+      "unavailable": [
+        "maintenance-net"
+      ],
+      "unknown": []
+    },
+    {
+      "id": "compound-outage",
+      "name": "認証＋保守回線停止",
+      "description": "共通障害で認証と保守経路の両方が失われた場合。",
+      "unavailable": [
+        "idp-health",
+        "maintenance-net"
+      ],
+      "unknown": []
+    }
+  ]
+}

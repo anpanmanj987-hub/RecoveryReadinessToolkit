@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "fictional-aws",
+    "name": "架空AWS / 分離保管と復旧経路",
+    "demo": true
+  },
+  "evidence": [
+    {
+      "id": "cfg",
+      "type": "configuration",
+      "collected_at": "2026-10-14",
+      "reference": "SYNTHETIC configuration fixture"
+    },
+    {
+      "id": "test",
+      "type": "tested",
+      "collected_at": "2026-10-14",
+      "reference": "SYNTHETIC test fixture"
+    },
+    {
+      "id": "say",
+      "type": "self_reported",
+      "collected_at": "2026-10-14",
+      "reference": "Synthetic interview"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prod",
+      "label": "本番AWSアカウント",
+      "kind": "account",
+      "provider": "aws",
+      "plane": "production",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "rec",
+      "label": "独立復旧アカウント",
+      "kind": "account",
+      "provider": "aws",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "vault",
+      "label": "Logically air-gapped vault想定",
+      "kind": "backup",
+      "provider": "aws",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "logs",
+      "label": "検証ログ",
+      "kind": "log_store",
+      "provider": "aws",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "organization-admin",
+      "label": "Organizations管理面",
+      "kind": "identity",
+      "provider": "aws",
+      "plane": "shared",
+      "evidence": [
+        "cfg"
+      ]
+    }
+  ],
+  "edges": [],
+  "scenarios": [
+    {
+      "id": "account-takeover",
+      "name": "本番アカウント侵害",
+      "compromised": [
+        "prod"
+      ]
+    },
+    {
+      "id": "organization-takeover",
+      "name": "組織管理面侵害（権限未調査）",
+      "compromised": [
+        "organization-admin"
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "id": "core",
+      "name": "基幹業務",
+      "provider": "aws",
+      "workload": "aws_ec2",
+      "production_node": "prod",
+      "recovery_node": "rec",
+      "backup_node": "vault",
+      "key_node": null,
+      "log_node": "logs",
+      "facts": {
+        "lock_finalized": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "control_graph_complete": {
+          "value": null,
+          "evidence": []
+        },
+        "network_graph_complete": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "independent_identity": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "dedicated_admin_device": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "independent_approval": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "runbook_available": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "control_plane_exported": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "network_default_deny": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "egress_allowlist": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "immutable_applies_to_points": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "recovery_point_exists": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "recovery_point_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "independent_backup_approval": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "key_usable": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_supported": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_data_covered": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_identity_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_config_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "m365_domain_plan": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "quarantine_separate": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "malware_scan_recorded": {
+          "value": null,
+          "evidence": []
+        },
+        "configuration_diff_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "permissions_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "secrets_rotated": {
+          "value": null,
+          "evidence": []
+        },
+        "log_immutable": {
+          "value": true,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "log_capture_verified": {
+          "value": null,
+          "evidence": []
+        },
+        "release_approval": {
+          "value": null,
+          "evidence": []
+        },
+        "application_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "external_dependencies_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "immutable_mode": {
+          "value": "compliance",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "protection_until": {
+          "value": "2027-01-31",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "retention_days": {
+          "value": 120,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "required_retention_days": {
+          "value": 90,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "key_management": {
+          "value": "provider",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "restore_method": {
+          "value": "aws_backup",
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "rto_hours": {
+          "value": 8,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "measured_rto_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "rpo_hours": {
+          "value": 24,
+          "evidence": [
+            "cfg"
+          ]
+        },
+        "measured_data_loss_hours": {
+          "value": null,
+          "evidence": []
+        }
+      },
+      "note": "AWS RAM/承認方式/対象リソース/鍵の条件は未確認。Organizationsの管理権限を自動で全権限と推論しない。"
+    }
+  ]
+}

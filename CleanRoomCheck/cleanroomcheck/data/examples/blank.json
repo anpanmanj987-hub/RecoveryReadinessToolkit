@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "your-project",
+    "name": "新規レビュー",
+    "demo": false
+  },
+  "evidence": [],
+  "nodes": [
+    {
+      "id": "production",
+      "label": "本番",
+      "kind": "workload",
+      "provider": "generic",
+      "plane": "production"
+    },
+    {
+      "id": "recovery",
+      "label": "復旧先",
+      "kind": "recovery",
+      "provider": "generic",
+      "plane": "recovery"
+    },
+    {
+      "id": "backup",
+      "label": "バックアップ保管先",
+      "kind": "backup",
+      "provider": "generic",
+      "plane": "backup"
+    }
+  ],
+  "edges": [],
+  "scenarios": [
+    {
+      "id": "production-compromise",
+      "name": "本番管理面侵害",
+      "compromised": [
+        "production"
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "id": "workload",
+      "name": "対象業務",
+      "provider": "generic",
+      "workload": "other",
+      "production_node": "production",
+      "recovery_node": "recovery",
+      "backup_node": "backup",
+      "facts": {
+        "lock_finalized": {
+          "value": null,
+          "evidence": []
+        },
+        "control_graph_complete": {
+          "value": null,
+          "evidence": []
+        },
+        "network_graph_complete": {
+          "value": null,
+          "evidence": []
+        },
+        "independent_identity": {
+          "value": null,
+          "evidence": []
+        },
+        "dedicated_admin_device": {
+          "value": null,
+          "evidence": []
+        },
+        "independent_approval": {
+          "value": null,
+          "evidence": []
+        },
+        "runbook_available": {
+          "value": null,
+          "evidence": []
+        },
+        "control_plane_exported": {
+          "value": null,
+          "evidence": []
+        },
+        "network_default_deny": {
+          "value": null,
+          "evidence": []
+        },
+        "egress_allowlist": {
+          "value": null,
+          "evidence": []
+        },
+        "immutable_applies_to_points": {
+          "value": null,
+          "evidence": []
+        },
+        "recovery_point_exists": {
+          "value": null,
+          "evidence": []
+        },
+        "recovery_point_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "independent_backup_approval": {
+          "value": null,
+          "evidence": []
+        },
+        "key_usable": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_supported": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_data_covered": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_identity_plan": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_config_plan": {
+          "value": null,
+          "evidence": []
+        },
+        "m365_domain_plan": {
+          "value": null,
+          "evidence": []
+        },
+        "quarantine_separate": {
+          "value": null,
+          "evidence": []
+        },
+        "malware_scan_recorded": {
+          "value": null,
+          "evidence": []
+        },
+        "configuration_diff_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "permissions_reviewed": {
+          "value": null,
+          "evidence": []
+        },
+        "secrets_rotated": {
+          "value": null,
+          "evidence": []
+        },
+        "log_immutable": {
+          "value": null,
+          "evidence": []
+        },
+        "log_capture_verified": {
+          "value": null,
+          "evidence": []
+        },
+        "release_approval": {
+          "value": null,
+          "evidence": []
+        },
+        "application_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "external_dependencies_tested": {
+          "value": null,
+          "evidence": []
+        },
+        "rto_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "measured_rto_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "rpo_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "measured_data_loss_hours": {
+          "value": null,
+          "evidence": []
+        },
+        "retention_days": {
+          "value": null,
+          "evidence": []
+        },
+        "required_retention_days": {
+          "value": null,
+          "evidence": []
+        },
+        "protection_until": {
+          "value": null,
+          "evidence": []
+        },
+        "immutable_mode": {
+          "value": null,
+          "evidence": []
+        },
+        "key_management": {
+          "value": null,
+          "evidence": []
+        },
+        "restore_method": {
+          "value": null,
+          "evidence": []
+        }
+      }
+    }
+  ]
+}

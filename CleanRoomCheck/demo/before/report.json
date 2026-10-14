@@ -1,0 +1,4287 @@
+{
+  "report_version": "1.0",
+  "tool": "CleanRoomCheck",
+  "tool_version": "0.1.0a1",
+  "ruleset_version": "2026.10-alpha1",
+  "as_of": "2026-10-14",
+  "max_evidence_age_days": 90,
+  "input_sha256": "e491f5645fac9f8334199bedd7985b007a9799a88745ac5a014a9aba429397a7",
+  "project": {
+    "id": "fictional-company",
+    "name": "架空金融グループ / クリーン環境検討",
+    "demo": true,
+    "description": "公開デモ用の架空構成。実顧客の環境や製品の導入実績ではない。"
+  },
+  "summary": {
+    "PASSED": 13,
+    "FAILED": 35,
+    "UNKNOWN": 36,
+    "NOT_APPLICABLE": 12
+  },
+  "overall": "NEEDS_REMEDIATION",
+  "disclaimer": "入力モデルと証跡メタデータに基づく設計点検です。実クラウド、証跡の実体・真正性、マルウェア不存在、復旧成功を保証しません。",
+  "findings": [
+    {
+      "id": "tenant-takeover/core/CRC-ID-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-001",
+      "title": "復旧環境の管理権限・IDの独立性",
+      "category": "ID",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "管理権限が復旧側に到達します。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "inferred:prod-tenant:rec-sub",
+            "source": "prod-tenant",
+            "target": "rec-sub",
+            "relation": "controls",
+            "evidence": [
+              "cfg"
+            ],
+            "evidence_groups": [
+              [
+                "cfg"
+              ],
+              [
+                "cfg"
+              ]
+            ],
+            "inferred": "AZURE_GLOBAL_ADMIN",
+            "source_ids": [
+              "MS-AZURE-ELEVATE"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "MS-AZURE-ELEVATE",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "本番から復旧側へ至る実効管理権限を分離。テナント分離と復元方式の対応性をセットで確認。",
+      "question": "本番管理者、委任、SSO、共通CI/CD、MDMから復旧側を管理できる経路は残りませんか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-ID-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-002",
+      "title": "復旧用管理端末の独立性",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 独立管理の復旧用端末を確保",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "dedicated_admin_device",
+          "label": "独立管理の復旧用端末を確保",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧用管理端末の独立性」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧用管理端末の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-ID-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-003",
+      "title": "復旧操作の職務分離・独立承認",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧操作の承認者・承認経路が独立",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_approval",
+          "label": "復旧操作の承認者・承認経路が独立",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧操作の職務分離・独立承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧操作の職務分離・独立承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-ID-004",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-004",
+      "title": "手順書・連絡先への独立したアクセス",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 本番IDなしで手順・連絡先を参照可能",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "runbook_available",
+          "label": "本番IDなしで手順・連絡先を参照可能",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「手順書・連絡先への独立したアクセス」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「手順書・連絡先への独立したアクセス」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-NET-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-001",
+      "title": "侵害起点から復旧側への通信経路",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "侵害起点またはその管理対象から、復旧側への登録済み通信経路があります。これは攻撃成功の判定ではありません。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "inferred:prod-tenant:prod-sub",
+            "source": "prod-tenant",
+            "target": "prod-sub",
+            "relation": "controls",
+            "evidence": [
+              "cfg"
+            ],
+            "evidence_groups": [
+              [
+                "cfg"
+              ],
+              [
+                "cfg"
+              ]
+            ],
+            "inferred": "AZURE_GLOBAL_ADMIN",
+            "source_ids": [
+              "MS-AZURE-ELEVATE"
+            ]
+          },
+          {
+            "id": "edge-1",
+            "source": "prod-sub",
+            "target": "rec-sub",
+            "relation": "network_reach",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「侵害起点から復旧側への通信経路」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "選択シナリオの侵害起点から復旧側まで、実効的な許可通信は存在しますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-NET-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-002",
+      "title": "隔離環境の既定拒否",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧環境の通信は既定拒否",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "network_default_deny",
+          "label": "復旧環境の通信は既定拒否",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「隔離環境の既定拒否」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「隔離環境の既定拒否」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-NET-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-003",
+      "title": "検証に必要な外向き通信の限定",
+      "category": "NET",
+      "severity": "medium",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 外向き通信の許可先を限定",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "egress_allowlist",
+          "label": "外向き通信の許可先を限定",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「検証に必要な外向き通信の限定」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「検証に必要な外向き通信の限定」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-001",
+      "title": "不変性のモードとロック確定",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "不変性が未設定、解除可能、または不可逆ロックが未確定です。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_mode",
+          "label": "不変性のモード/ロック確定状態",
+          "value": "azure_unlocked",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "lock_finalized",
+          "label": "猶予期間終了・不可逆ロックの確定を確認",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK",
+        "AWS-VAULT-LOCK"
+      ],
+      "remediation": "解除可能なモードと確定済みロックを区別。対象サービス・状態を確認し、不可逆操作は人が承認して実施。",
+      "question": "保管先の正確な製品、ロックモード、猶予期間終了、対象復旧点への適用を示せますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-002",
+      "title": "実際の復旧点への保護適用と有効期限",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "必要な復旧点への不変保護の適用と、評価日より後の終了日が入力されています。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_applies_to_points",
+          "label": "必要な復旧点への不変性適用を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "protection_until",
+          "label": "必要な復旧点の最も早い不変保護終了日",
+          "value": "2027-01-31",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK"
+      ],
+      "remediation": "「実際の復旧点への保護適用と有効期限」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「実際の復旧点への保護適用と有効期限」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-003",
+      "title": "業務要件に対する保持期間",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "バックアップ保持日数=10 / 業務側が定めた必要保持日数=90。入力上、目標を満たしません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "retention_days",
+          "label": "バックアップ保持日数",
+          "value": 10,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "required_retention_days",
+          "label": "業務側が定めた必要保持日数",
+          "value": 90,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "一律の日数で安全とせず、調査・復旧の想定に基づく必要保持日数を業務側で決定。",
+      "question": "「業務要件に対する保持期間」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-004",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-004",
+      "title": "復旧点の実在と選定根拠の検証",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復旧点の侵害兆候・選定根拠を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "recovery_point_exists",
+          "label": "必要な復旧点の実在を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "recovery_point_reviewed",
+          "label": "復旧点の侵害兆候・選定根拠を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "必要な復旧点の実在と選定根拠を確認。検証済みでもマルウェア不存在の証明とは扱わない。",
+      "question": "「復旧点の実在と選定根拠の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-005",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-005",
+      "title": "バックアップ破壊的操作の承認分離",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: バックアップ破壊的操作の承認を分離",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_backup_approval",
+          "label": "バックアップ破壊的操作の承認を分離",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-MUA",
+        "AWS-AIRGAP"
+      ],
+      "remediation": "「バックアップ破壊的操作の承認分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「バックアップ破壊的操作の承認分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-BAK-006",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-006",
+      "title": "バックアップ管理面の独立性",
+      "category": "BAK",
+      "severity": "medium",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "登録グラフ上、選択した侵害起点から対象へ至る管理/破壊権限経路は未検出です。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "control_graph_complete",
+          "label": "管理権限グラフの調査範囲を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "管理面の共有範囲と変更可能操作を確認。管理面への到達は、不変復旧点の削除成功とは別の評価。",
+      "question": "「バックアップ管理面の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-KEY-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-001",
+      "title": "復号鍵の管理・破壊権限の独立性",
+      "category": "KEY",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "復号鍵への管理・削除・無効化の実効権限経路があります。データ不変性とは別のリスクです。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "inferred:prod-tenant:prod-sub",
+            "source": "prod-tenant",
+            "target": "prod-sub",
+            "relation": "controls",
+            "evidence": [
+              "cfg"
+            ],
+            "evidence_groups": [
+              [
+                "cfg"
+              ],
+              [
+                "cfg"
+              ]
+            ],
+            "inferred": "AZURE_GLOBAL_ADMIN",
+            "source_ids": [
+              "MS-AZURE-ELEVATE"
+            ]
+          },
+          {
+            "id": "edge-0",
+            "source": "prod-sub",
+            "target": "key",
+            "relation": "can_disable",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "復号鍵の管理・無効化・削除の実効権限を分離し、鍵を使える復旧経路も別途試験。",
+      "question": "「復号鍵の管理・破壊権限の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-KEY-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-002",
+      "title": "本番を使わない復号の実証",
+      "category": "KEY",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 独立した復旧経路で復号を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "key_usable",
+          "label": "独立した復旧経路で復号を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番を使わない復号の実証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番を使わない復号の実証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-REC-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-001",
+      "title": "復元方式と復元先の対応性",
+      "category": "REC",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力上、復元方式の対応確認があり、組込みの既知制約とは矛盾しません。復元成功の判定ではありません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "restore_method",
+          "label": "採用する復元方式",
+          "value": "azure_vm_native",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "restore_supported",
+          "label": "製品/方式の復元先・対象制約を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [],
+      "source_ids": [
+        "MS-VM-RESTORE",
+        "AWS-AIRGAP",
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "対象製品・版・ワークロード・リージョン・鍵・テナント/アカウント制約を裏付ける資料を確認。",
+      "question": "想定する復元元/先と認証断の条件で、その製品・版・ワークロードは復元可能ですか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-REC-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-002",
+      "title": "想定侵害条件での復元試験",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 想定侵害条件で復元試験を実施済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "restore_tested",
+          "label": "想定侵害条件で復元試験を実施済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「想定侵害条件での復元試験」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「想定侵害条件での復元試験」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-REC-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-003",
+      "title": "RTO目標と実測値の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rto_hours",
+          "label": "目標RTO（時間）",
+          "value": 8,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_rto_hours",
+          "label": "試験で実測したRTO（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RTO目標と実測値の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RTO目標と実測値の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-REC-004",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-004",
+      "title": "RPO目標と実測損失幅の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rpo_hours",
+          "label": "目標RPO（時間）",
+          "value": 24,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_data_loss_hours",
+          "label": "選定復旧点による実測データ損失幅（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RPO目標と実測損失幅の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RPO目標と実測損失幅の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-REC-005",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-005",
+      "title": "データ以外の再構築材料の保全",
+      "category": "REC",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: ID/構成/IaC等の再構築材料を保全",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "control_plane_exported",
+          "label": "ID/構成/IaC等の再構築材料を保全",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「データ以外の再構築材料の保全」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「データ以外の再構築材料の保全」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-M365-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-001",
+      "title": "M365データ復旧範囲の整理",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "「M365データ復旧範囲の整理」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365データ復旧範囲の整理」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-M365-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-002",
+      "title": "M365/Entra IDの再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365/Entra IDの再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365/Entra IDの再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-M365-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-003",
+      "title": "M365設定の再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365設定の再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365設定の再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-M365-004",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-004",
+      "title": "M365ドメイン・外部連携計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365ドメイン・外部連携計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365ドメイン・外部連携計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-001",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-001",
+      "title": "管理・検疫・検証後の区画分離",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力値では確認条件を満たします。証跡の強度・鮮度も別途照合します。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "quarantine_separate",
+          "label": "管理区画・検疫区画・検証後区画を分離",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「管理・検疫・検証後の区画分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「管理・検疫・検証後の区画分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-002",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-002",
+      "title": "復元物のマルウェア検査記録",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物のマルウェア検査結果を記録",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "malware_scan_recorded",
+          "label": "復元物のマルウェア検査結果を記録",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物のマルウェア検査記録」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物のマルウェア検査記録」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-003",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-003",
+      "title": "既知正常構成との比較",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 既知正常構成との差分を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "configuration_diff_reviewed",
+          "label": "既知正常構成との差分を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「既知正常構成との比較」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「既知正常構成との比較」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-004",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-004",
+      "title": "復元後の権限・永続化確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元後の権限・永続化設定を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "permissions_reviewed",
+          "label": "復元後の権限・永続化設定を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元後の権限・永続化確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元後の権限・永続化確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-005",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-005",
+      "title": "復元物に含まれる資格情報の再発行",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物に含まれる資格情報を再発行",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "secrets_rotated",
+          "label": "復元物に含まれる資格情報を再発行",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物に含まれる資格情報の再発行」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物に含まれる資格情報の再発行」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-006",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-006",
+      "title": "ログの不変化と実取得の確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: ログが実際に取得・保全されることを確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "log_immutable",
+          "label": "ログ保管の不変性を設定",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "log_capture_verified",
+          "label": "ログが実際に取得・保全されることを確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「ログの不変化と実取得の確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「ログの不変化と実取得の確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-007",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-007",
+      "title": "本番再接続の承認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 本番再接続の条件と承認記録あり",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "release_approval",
+          "label": "本番再接続の条件と承認記録あり",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番再接続の承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番再接続の承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "tenant-takeover/core/CRC-VAL-008",
+      "scenario_id": "tenant-takeover",
+      "scenario_name": "本番全体管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-008",
+      "title": "業務機能・外部依存の検証",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 業務機能・整合性試験を実施、外部依存先との復旧接続を試験",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "application_tested",
+          "label": "業務機能・整合性試験を実施",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        },
+        {
+          "field": "external_dependencies_tested",
+          "label": "外部依存先との復旧接続を試験",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「業務機能・外部依存の検証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「業務機能・外部依存の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-ID-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-001",
+      "title": "復旧環境の管理権限・IDの独立性",
+      "category": "ID",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧側のID・認証管理が独立",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_identity",
+          "label": "復旧側のID・認証管理が独立",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-AZURE-ELEVATE",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "本番から復旧側へ至る実効管理権限を分離。テナント分離と復元方式の対応性をセットで確認。",
+      "question": "本番管理者、委任、SSO、共通CI/CD、MDMから復旧側を管理できる経路は残りませんか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-ID-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-002",
+      "title": "復旧用管理端末の独立性",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 独立管理の復旧用端末を確保",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "dedicated_admin_device",
+          "label": "独立管理の復旧用端末を確保",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧用管理端末の独立性」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧用管理端末の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-ID-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-003",
+      "title": "復旧操作の職務分離・独立承認",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧操作の承認者・承認経路が独立",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_approval",
+          "label": "復旧操作の承認者・承認経路が独立",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧操作の職務分離・独立承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧操作の職務分離・独立承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-ID-004",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-004",
+      "title": "手順書・連絡先への独立したアクセス",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 本番IDなしで手順・連絡先を参照可能",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "runbook_available",
+          "label": "本番IDなしで手順・連絡先を参照可能",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「手順書・連絡先への独立したアクセス」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「手順書・連絡先への独立したアクセス」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-NET-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-001",
+      "title": "侵害起点から復旧側への通信経路",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "登録された通信経路では、侵害起点から復旧側に到達しません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "network_graph_complete",
+          "label": "通信経路グラフの調査範囲を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「侵害起点から復旧側への通信経路」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "選択シナリオの侵害起点から復旧側まで、実効的な許可通信は存在しますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-NET-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-002",
+      "title": "隔離環境の既定拒否",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧環境の通信は既定拒否",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "network_default_deny",
+          "label": "復旧環境の通信は既定拒否",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「隔離環境の既定拒否」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「隔離環境の既定拒否」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-NET-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-003",
+      "title": "検証に必要な外向き通信の限定",
+      "category": "NET",
+      "severity": "medium",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 外向き通信の許可先を限定",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "egress_allowlist",
+          "label": "外向き通信の許可先を限定",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「検証に必要な外向き通信の限定」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「検証に必要な外向き通信の限定」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-001",
+      "title": "不変性のモードとロック確定",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "不変性が未設定、解除可能、または不可逆ロックが未確定です。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_mode",
+          "label": "不変性のモード/ロック確定状態",
+          "value": "azure_unlocked",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "lock_finalized",
+          "label": "猶予期間終了・不可逆ロックの確定を確認",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK",
+        "AWS-VAULT-LOCK"
+      ],
+      "remediation": "解除可能なモードと確定済みロックを区別。対象サービス・状態を確認し、不可逆操作は人が承認して実施。",
+      "question": "保管先の正確な製品、ロックモード、猶予期間終了、対象復旧点への適用を示せますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-002",
+      "title": "実際の復旧点への保護適用と有効期限",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "必要な復旧点への不変保護の適用と、評価日より後の終了日が入力されています。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_applies_to_points",
+          "label": "必要な復旧点への不変性適用を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "protection_until",
+          "label": "必要な復旧点の最も早い不変保護終了日",
+          "value": "2027-01-31",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK"
+      ],
+      "remediation": "「実際の復旧点への保護適用と有効期限」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「実際の復旧点への保護適用と有効期限」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-003",
+      "title": "業務要件に対する保持期間",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "バックアップ保持日数=10 / 業務側が定めた必要保持日数=90。入力上、目標を満たしません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "retention_days",
+          "label": "バックアップ保持日数",
+          "value": 10,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "required_retention_days",
+          "label": "業務側が定めた必要保持日数",
+          "value": 90,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "一律の日数で安全とせず、調査・復旧の想定に基づく必要保持日数を業務側で決定。",
+      "question": "「業務要件に対する保持期間」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-004",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-004",
+      "title": "復旧点の実在と選定根拠の検証",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復旧点の侵害兆候・選定根拠を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "recovery_point_exists",
+          "label": "必要な復旧点の実在を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "recovery_point_reviewed",
+          "label": "復旧点の侵害兆候・選定根拠を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "必要な復旧点の実在と選定根拠を確認。検証済みでもマルウェア不存在の証明とは扱わない。",
+      "question": "「復旧点の実在と選定根拠の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-005",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-005",
+      "title": "バックアップ破壊的操作の承認分離",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: バックアップ破壊的操作の承認を分離",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_backup_approval",
+          "label": "バックアップ破壊的操作の承認を分離",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-MUA",
+        "AWS-AIRGAP"
+      ],
+      "remediation": "「バックアップ破壊的操作の承認分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「バックアップ破壊的操作の承認分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-BAK-006",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-006",
+      "title": "バックアップ管理面の独立性",
+      "category": "BAK",
+      "severity": "medium",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "バックアップ管理面への管理/破壊権限経路があります。不変復旧点を削除できるという判定ではありません。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "edge-2",
+            "source": "backup-admin",
+            "target": "vault",
+            "relation": "controls",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "管理面の共有範囲と変更可能操作を確認。管理面への到達は、不変復旧点の削除成功とは別の評価。",
+      "question": "「バックアップ管理面の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-KEY-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-001",
+      "title": "復号鍵の管理・破壊権限の独立性",
+      "category": "KEY",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "復号鍵への管理・削除・無効化の実効権限経路があります。データ不変性とは別のリスクです。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "edge-3",
+            "source": "backup-admin",
+            "target": "key",
+            "relation": "can_delete",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "復号鍵の管理・無効化・削除の実効権限を分離し、鍵を使える復旧経路も別途試験。",
+      "question": "「復号鍵の管理・破壊権限の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-KEY-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-002",
+      "title": "本番を使わない復号の実証",
+      "category": "KEY",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 独立した復旧経路で復号を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "key_usable",
+          "label": "独立した復旧経路で復号を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番を使わない復号の実証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番を使わない復号の実証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-REC-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-001",
+      "title": "復元方式と復元先の対応性",
+      "category": "REC",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力上、復元方式の対応確認があり、組込みの既知制約とは矛盾しません。復元成功の判定ではありません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "restore_method",
+          "label": "採用する復元方式",
+          "value": "azure_vm_native",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "restore_supported",
+          "label": "製品/方式の復元先・対象制約を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [],
+      "source_ids": [
+        "MS-VM-RESTORE",
+        "AWS-AIRGAP",
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "対象製品・版・ワークロード・リージョン・鍵・テナント/アカウント制約を裏付ける資料を確認。",
+      "question": "想定する復元元/先と認証断の条件で、その製品・版・ワークロードは復元可能ですか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-REC-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-002",
+      "title": "想定侵害条件での復元試験",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 想定侵害条件で復元試験を実施済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "restore_tested",
+          "label": "想定侵害条件で復元試験を実施済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「想定侵害条件での復元試験」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「想定侵害条件での復元試験」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-REC-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-003",
+      "title": "RTO目標と実測値の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rto_hours",
+          "label": "目標RTO（時間）",
+          "value": 8,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_rto_hours",
+          "label": "試験で実測したRTO（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RTO目標と実測値の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RTO目標と実測値の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-REC-004",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-004",
+      "title": "RPO目標と実測損失幅の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rpo_hours",
+          "label": "目標RPO（時間）",
+          "value": 24,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_data_loss_hours",
+          "label": "選定復旧点による実測データ損失幅（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RPO目標と実測損失幅の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RPO目標と実測損失幅の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-REC-005",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-005",
+      "title": "データ以外の再構築材料の保全",
+      "category": "REC",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: ID/構成/IaC等の再構築材料を保全",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "control_plane_exported",
+          "label": "ID/構成/IaC等の再構築材料を保全",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「データ以外の再構築材料の保全」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「データ以外の再構築材料の保全」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-M365-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-001",
+      "title": "M365データ復旧範囲の整理",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "「M365データ復旧範囲の整理」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365データ復旧範囲の整理」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-M365-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-002",
+      "title": "M365/Entra IDの再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365/Entra IDの再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365/Entra IDの再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-M365-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-003",
+      "title": "M365設定の再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365設定の再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365設定の再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-M365-004",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-004",
+      "title": "M365ドメイン・外部連携計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365ドメイン・外部連携計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365ドメイン・外部連携計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-001",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-001",
+      "title": "管理・検疫・検証後の区画分離",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力値では確認条件を満たします。証跡の強度・鮮度も別途照合します。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "quarantine_separate",
+          "label": "管理区画・検疫区画・検証後区画を分離",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「管理・検疫・検証後の区画分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「管理・検疫・検証後の区画分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-002",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-002",
+      "title": "復元物のマルウェア検査記録",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物のマルウェア検査結果を記録",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "malware_scan_recorded",
+          "label": "復元物のマルウェア検査結果を記録",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物のマルウェア検査記録」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物のマルウェア検査記録」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-003",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-003",
+      "title": "既知正常構成との比較",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 既知正常構成との差分を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "configuration_diff_reviewed",
+          "label": "既知正常構成との差分を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「既知正常構成との比較」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「既知正常構成との比較」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-004",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-004",
+      "title": "復元後の権限・永続化確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元後の権限・永続化設定を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "permissions_reviewed",
+          "label": "復元後の権限・永続化設定を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元後の権限・永続化確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元後の権限・永続化確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-005",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-005",
+      "title": "復元物に含まれる資格情報の再発行",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物に含まれる資格情報を再発行",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "secrets_rotated",
+          "label": "復元物に含まれる資格情報を再発行",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物に含まれる資格情報の再発行」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物に含まれる資格情報の再発行」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-006",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-006",
+      "title": "ログの不変化と実取得の確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: ログが実際に取得・保全されることを確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "log_immutable",
+          "label": "ログ保管の不変性を設定",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "log_capture_verified",
+          "label": "ログが実際に取得・保全されることを確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「ログの不変化と実取得の確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「ログの不変化と実取得の確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-007",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-007",
+      "title": "本番再接続の承認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 本番再接続の条件と承認記録あり",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "release_approval",
+          "label": "本番再接続の条件と承認記録あり",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番再接続の承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番再接続の承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "backup-admin-takeover/core/CRC-VAL-008",
+      "scenario_id": "backup-admin-takeover",
+      "scenario_name": "バックアップ管理者侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-008",
+      "title": "業務機能・外部依存の検証",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 業務機能・整合性試験を実施、外部依存先との復旧接続を試験",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "application_tested",
+          "label": "業務機能・整合性試験を実施",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        },
+        {
+          "field": "external_dependencies_tested",
+          "label": "外部依存先との復旧接続を試験",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「業務機能・外部依存の検証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「業務機能・外部依存の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-ID-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-001",
+      "title": "復旧環境の管理権限・IDの独立性",
+      "category": "ID",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "管理権限が復旧側に到達します。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "edge-4",
+            "source": "shared-pipeline",
+            "target": "rec-sub",
+            "relation": "controls",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "MS-AZURE-ELEVATE",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "本番から復旧側へ至る実効管理権限を分離。テナント分離と復元方式の対応性をセットで確認。",
+      "question": "本番管理者、委任、SSO、共通CI/CD、MDMから復旧側を管理できる経路は残りませんか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-ID-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-002",
+      "title": "復旧用管理端末の独立性",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 独立管理の復旧用端末を確保",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "dedicated_admin_device",
+          "label": "独立管理の復旧用端末を確保",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧用管理端末の独立性」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧用管理端末の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-ID-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-003",
+      "title": "復旧操作の職務分離・独立承認",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧操作の承認者・承認経路が独立",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_approval",
+          "label": "復旧操作の承認者・承認経路が独立",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復旧操作の職務分離・独立承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復旧操作の職務分離・独立承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-ID-004",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-ID-004",
+      "title": "手順書・連絡先への独立したアクセス",
+      "category": "ID",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 本番IDなしで手順・連絡先を参照可能",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "runbook_available",
+          "label": "本番IDなしで手順・連絡先を参照可能",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「手順書・連絡先への独立したアクセス」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「手順書・連絡先への独立したアクセス」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-NET-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-001",
+      "title": "侵害起点から復旧側への通信経路",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "登録された通信経路では、侵害起点から復旧側に到達しません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "network_graph_complete",
+          "label": "通信経路グラフの調査範囲を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「侵害起点から復旧側への通信経路」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "選択シナリオの侵害起点から復旧側まで、実効的な許可通信は存在しますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-NET-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-002",
+      "title": "隔離環境の既定拒否",
+      "category": "NET",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 復旧環境の通信は既定拒否",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "network_default_deny",
+          "label": "復旧環境の通信は既定拒否",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「隔離環境の既定拒否」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「隔離環境の既定拒否」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-NET-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-NET-003",
+      "title": "検証に必要な外向き通信の限定",
+      "category": "NET",
+      "severity": "medium",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: 外向き通信の許可先を限定",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "egress_allowlist",
+          "label": "外向き通信の許可先を限定",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「検証に必要な外向き通信の限定」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「検証に必要な外向き通信の限定」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-001",
+      "title": "不変性のモードとロック確定",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "不変性が未設定、解除可能、または不可逆ロックが未確定です。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_mode",
+          "label": "不変性のモード/ロック確定状態",
+          "value": "azure_unlocked",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "lock_finalized",
+          "label": "猶予期間終了・不可逆ロックの確定を確認",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK",
+        "AWS-VAULT-LOCK"
+      ],
+      "remediation": "解除可能なモードと確定済みロックを区別。対象サービス・状態を確認し、不可逆操作は人が承認して実施。",
+      "question": "保管先の正確な製品、ロックモード、猶予期間終了、対象復旧点への適用を示せますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-002",
+      "title": "実際の復旧点への保護適用と有効期限",
+      "category": "BAK",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "必要な復旧点への不変保護の適用と、評価日より後の終了日が入力されています。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "immutable_applies_to_points",
+          "label": "必要な復旧点への不変性適用を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "protection_until",
+          "label": "必要な復旧点の最も早い不変保護終了日",
+          "value": "2027-01-31",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-IMMUTABLE",
+        "AWS-OBJECT-LOCK"
+      ],
+      "remediation": "「実際の復旧点への保護適用と有効期限」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「実際の復旧点への保護適用と有効期限」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-003",
+      "title": "業務要件に対する保持期間",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "バックアップ保持日数=10 / 業務側が定めた必要保持日数=90。入力上、目標を満たしません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "retention_days",
+          "label": "バックアップ保持日数",
+          "value": 10,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "required_retention_days",
+          "label": "業務側が定めた必要保持日数",
+          "value": 90,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "一律の日数で安全とせず、調査・復旧の想定に基づく必要保持日数を業務側で決定。",
+      "question": "「業務要件に対する保持期間」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-004",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-004",
+      "title": "復旧点の実在と選定根拠の検証",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復旧点の侵害兆候・選定根拠を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "recovery_point_exists",
+          "label": "必要な復旧点の実在を確認",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "recovery_point_reviewed",
+          "label": "復旧点の侵害兆候・選定根拠を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "必要な復旧点の実在と選定根拠を確認。検証済みでもマルウェア不存在の証明とは扱わない。",
+      "question": "「復旧点の実在と選定根拠の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-005",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-005",
+      "title": "バックアップ破壊的操作の承認分離",
+      "category": "BAK",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: バックアップ破壊的操作の承認を分離",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "independent_backup_approval",
+          "label": "バックアップ破壊的操作の承認を分離",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-MUA",
+        "AWS-AIRGAP"
+      ],
+      "remediation": "「バックアップ破壊的操作の承認分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「バックアップ破壊的操作の承認分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-BAK-006",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-BAK-006",
+      "title": "バックアップ管理面の独立性",
+      "category": "BAK",
+      "severity": "medium",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "登録グラフ上、選択した侵害起点から対象へ至る管理/破壊権限経路は未検出です。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "control_graph_complete",
+          "label": "管理権限グラフの調査範囲を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "管理面の共有範囲と変更可能操作を確認。管理面への到達は、不変復旧点の削除成功とは別の評価。",
+      "question": "「バックアップ管理面の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-KEY-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-001",
+      "title": "復号鍵の管理・破壊権限の独立性",
+      "category": "KEY",
+      "severity": "critical",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "復号鍵への管理・削除・無効化の実効権限経路があります。データ不変性とは別のリスクです。",
+      "assurance": "configuration",
+      "facts": [],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [
+        [
+          {
+            "id": "edge-5",
+            "source": "shared-pipeline",
+            "target": "key",
+            "relation": "can_disable",
+            "evidence": [
+              "cfg"
+            ]
+          }
+        ]
+      ],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "復号鍵の管理・無効化・削除の実効権限を分離し、鍵を使える復旧経路も別途試験。",
+      "question": "「復号鍵の管理・破壊権限の独立性」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-KEY-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-KEY-002",
+      "title": "本番を使わない復号の実証",
+      "category": "KEY",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 独立した復旧経路で復号を検証済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "key_usable",
+          "label": "独立した復旧経路で復号を検証済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "AWS-KEY-CAVEAT",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番を使わない復号の実証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番を使わない復号の実証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-REC-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-001",
+      "title": "復元方式と復元先の対応性",
+      "category": "REC",
+      "severity": "critical",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力上、復元方式の対応確認があり、組込みの既知制約とは矛盾しません。復元成功の判定ではありません。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "restore_method",
+          "label": "採用する復元方式",
+          "value": "azure_vm_native",
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "restore_supported",
+          "label": "製品/方式の復元先・対象制約を確認済み",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "paths": [],
+      "source_ids": [
+        "MS-VM-RESTORE",
+        "AWS-AIRGAP",
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "対象製品・版・ワークロード・リージョン・鍵・テナント/アカウント制約を裏付ける資料を確認。",
+      "question": "想定する復元元/先と認証断の条件で、その製品・版・ワークロードは復元可能ですか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-REC-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-002",
+      "title": "想定侵害条件での復元試験",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 想定侵害条件で復元試験を実施済み",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "restore_tested",
+          "label": "想定侵害条件で復元試験を実施済み",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「想定侵害条件での復元試験」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「想定侵害条件での復元試験」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-REC-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-003",
+      "title": "RTO目標と実測値の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rto_hours",
+          "label": "目標RTO（時間）",
+          "value": 8,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_rto_hours",
+          "label": "試験で実測したRTO（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RTO目標と実測値の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RTO目標と実測値の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-REC-004",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-004",
+      "title": "RPO目標と実測損失幅の照合",
+      "category": "REC",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "目標・要件と比較値を明示してください。必要保持日数0も未定義として扱います。",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "rpo_hours",
+          "label": "目標RPO（時間）",
+          "value": 24,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "measured_data_loss_hours",
+          "label": "選定復旧点による実測データ損失幅（時間）",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「RPO目標と実測損失幅の照合」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「RPO目標と実測損失幅の照合」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-REC-005",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-REC-005",
+      "title": "データ以外の再構築材料の保全",
+      "category": "REC",
+      "severity": "high",
+      "phase": "design",
+      "status": "FAILED",
+      "message": "入力上、未成立: ID/構成/IaC等の再構築材料を保全",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "control_plane_exported",
+          "label": "ID/構成/IaC等の再構築材料を保全",
+          "value": false,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「データ以外の再構築材料の保全」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「データ以外の再構築材料の保全」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-M365-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-001",
+      "title": "M365データ復旧範囲の整理",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP"
+      ],
+      "remediation": "「M365データ復旧範囲の整理」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365データ復旧範囲の整理」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-M365-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-002",
+      "title": "M365/Entra IDの再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365/Entra IDの再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365/Entra IDの再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-M365-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-003",
+      "title": "M365設定の再構築計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365設定の再構築計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365設定の再構築計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-M365-004",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-M365-004",
+      "title": "M365ドメイン・外部連携計画",
+      "category": "M365",
+      "severity": "high",
+      "phase": "design",
+      "status": "NOT_APPLICABLE",
+      "message": "この業務はM365として登録されていません。",
+      "assurance": "none",
+      "facts": [],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MS-M365-BACKUP",
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「M365ドメイン・外部連携計画」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「M365ドメイン・外部連携計画」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-001",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-001",
+      "title": "管理・検疫・検証後の区画分離",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "design",
+      "status": "PASSED",
+      "message": "入力値では確認条件を満たします。証跡の強度・鮮度も別途照合します。",
+      "assurance": "configuration",
+      "facts": [
+        {
+          "field": "quarantine_separate",
+          "label": "管理区画・検疫区画・検証後区画を分離",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「管理・検疫・検証後の区画分離」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「管理・検疫・検証後の区画分離」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-002",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-002",
+      "title": "復元物のマルウェア検査記録",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物のマルウェア検査結果を記録",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "malware_scan_recorded",
+          "label": "復元物のマルウェア検査結果を記録",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物のマルウェア検査記録」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物のマルウェア検査記録」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-003",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-003",
+      "title": "既知正常構成との比較",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 既知正常構成との差分を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "configuration_diff_reviewed",
+          "label": "既知正常構成との差分を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「既知正常構成との比較」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「既知正常構成との比較」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-004",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-004",
+      "title": "復元後の権限・永続化確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元後の権限・永続化設定を確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "permissions_reviewed",
+          "label": "復元後の権限・永続化設定を確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元後の権限・永続化確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元後の権限・永続化確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-005",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-005",
+      "title": "復元物に含まれる資格情報の再発行",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 復元物に含まれる資格情報を再発行",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "secrets_rotated",
+          "label": "復元物に含まれる資格情報を再発行",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「復元物に含まれる資格情報の再発行」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「復元物に含まれる資格情報の再発行」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-006",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-006",
+      "title": "ログの不変化と実取得の確認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: ログが実際に取得・保全されることを確認",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "log_immutable",
+          "label": "ログ保管の不変性を設定",
+          "value": true,
+          "level": "configuration",
+          "adequate": true,
+          "required": "configuration",
+          "notes": [],
+          "evidence_ids": [
+            "cfg"
+          ]
+        },
+        {
+          "field": "log_capture_verified",
+          "label": "ログが実際に取得・保全されることを確認",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「ログの不変化と実取得の確認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「ログの不変化と実取得の確認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-007",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-007",
+      "title": "本番再接続の承認",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 本番再接続の条件と承認記録あり",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "release_approval",
+          "label": "本番再接続の条件と承認記録あり",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「本番再接続の承認」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「本番再接続の承認」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    },
+    {
+      "id": "pipeline-takeover/core/CRC-VAL-008",
+      "scenario_id": "pipeline-takeover",
+      "scenario_name": "共通CI/CD侵害",
+      "assessment_id": "core",
+      "assessment_name": "基幹業務",
+      "rule_id": "CRC-VAL-008",
+      "title": "業務機能・外部依存の検証",
+      "category": "VAL",
+      "severity": "high",
+      "phase": "validation",
+      "status": "UNKNOWN",
+      "message": "未確認: 業務機能・整合性試験を実施、外部依存先との復旧接続を試験",
+      "assurance": "none",
+      "facts": [
+        {
+          "field": "application_tested",
+          "label": "業務機能・整合性試験を実施",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        },
+        {
+          "field": "external_dependencies_tested",
+          "label": "外部依存先との復旧接続を試験",
+          "value": null,
+          "level": "none",
+          "adequate": false,
+          "required": "tested",
+          "notes": [
+            "証跡未登録"
+          ],
+          "evidence_ids": []
+        }
+      ],
+      "path_evidence": [],
+      "paths": [],
+      "source_ids": [
+        "MANDIANT-IRE"
+      ],
+      "remediation": "「業務機能・外部依存の検証」について設計/試験を見直し、項目単位の証跡を登録してください。",
+      "question": "「業務機能・外部依存の検証」を、対象範囲・構成/試験日・根拠資料を含めて説明できますか？",
+      "evidence_note": "証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "MS-AZURE-ELEVATE",
+      "publisher": "Microsoft",
+      "title": "Elevate access to manage all Azure subscriptions and management groups",
+      "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin",
+      "verified_on": "2026-10-14",
+      "scope_note": "Entra IDの全体管理者によるルートスコープへの昇格と同一テナント内のAzure RBACへの影響。"
+    },
+    {
+      "id": "MS-MUA",
+      "publisher": "Microsoft",
+      "title": "Multi-user authorization using Resource Guard",
+      "url": "https://learn.microsoft.com/en-us/azure/backup/multi-user-authorization",
+      "verified_on": "2026-10-14",
+      "scope_note": "Resource Guardによる重要操作の承認と管理権限分離。"
+    },
+    {
+      "id": "MS-IMMUTABLE",
+      "publisher": "Microsoft",
+      "title": "Immutable vault for Azure Backup",
+      "url": "https://learn.microsoft.com/en-us/azure/backup/backup-azure-immutable-vault-concept",
+      "verified_on": "2026-10-14",
+      "scope_note": "EnabledとEnabled and lockedの差、保護期間と保管期間の違い。"
+    },
+    {
+      "id": "MS-VM-RESTORE",
+      "publisher": "Microsoft",
+      "title": "Support matrix for Azure VM backups",
+      "url": "https://learn.microsoft.com/en-us/azure/backup/backup-support-matrix-iaas",
+      "verified_on": "2026-10-14",
+      "scope_note": "標準Azure VM Cross Subscription Restoreの同一テナント条件と各種制約。"
+    },
+    {
+      "id": "AWS-OBJECT-LOCK",
+      "publisher": "AWS",
+      "title": "Locking objects with Object Lock",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
+      "verified_on": "2026-10-14",
+      "scope_note": "Governance/Complianceの違いとオブジェクト版の保持。"
+    },
+    {
+      "id": "AWS-KEY-CAVEAT",
+      "publisher": "AWS",
+      "title": "Object Lock considerations",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock-managing.html",
+      "verified_on": "2026-10-14",
+      "scope_note": "Object Lockだけでは暗号鍵へのアクセス喪失・削除を保護しない。"
+    },
+    {
+      "id": "AWS-VAULT-LOCK",
+      "publisher": "AWS",
+      "title": "AWS Backup Vault Lock",
+      "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html",
+      "verified_on": "2026-10-14",
+      "scope_note": "Vault Lockのモードと猶予期間を含む保護の考え方。"
+    },
+    {
+      "id": "AWS-AIRGAP",
+      "publisher": "AWS",
+      "title": "Logically air-gapped vault",
+      "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/logicallyairgappedvault.html",
+      "verified_on": "2026-10-14",
+      "scope_note": "別アカウントによる復旧経路、承認/共有と対象機能の確認。"
+    },
+    {
+      "id": "MS-M365-BACKUP",
+      "publisher": "Microsoft",
+      "title": "Overview of Microsoft 365 Backup",
+      "url": "https://learn.microsoft.com/en-us/microsoft-365/backup/backup-overview?view=o365-worldwide",
+      "verified_on": "2026-10-14",
+      "scope_note": "M365業務データ保護の説明。これをテナント全構成の再構築とは同一視しない。"
+    },
+    {
+      "id": "MANDIANT-IRE",
+      "publisher": "Google Cloud / Mandiant",
+      "title": "Isolated Recovery Environments: A Critical Layer in Modern Cyber Resilience",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/isolated-recovery-environments-modern-cyber-resilience",
+      "verified_on": "2026-10-14",
+      "scope_note": "独立した管理基盤、隔離された検証区画と復旧用区画の設計指針。"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "tenant-takeover",
+      "name": "本番全体管理者侵害",
+      "compromised": [
+        "prod-tenant"
+      ],
+      "azure_global_admin_tenants": [
+        "prod-tenant"
+      ]
+    },
+    {
+      "id": "backup-admin-takeover",
+      "name": "バックアップ管理者侵害",
+      "compromised": [
+        "backup-admin"
+      ]
+    },
+    {
+      "id": "pipeline-takeover",
+      "name": "共通CI/CD侵害",
+      "compromised": [
+        "shared-pipeline"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prod-tenant",
+      "label": "本番ID",
+      "kind": "tenant",
+      "provider": "azure",
+      "plane": "production",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "rec-tenant",
+      "label": "復旧ID",
+      "kind": "tenant",
+      "provider": "azure",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "prod-sub",
+      "label": "本番Sub",
+      "kind": "subscription",
+      "provider": "azure",
+      "plane": "production",
+      "tenant": "prod-tenant",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "rec-sub",
+      "label": "復旧Sub",
+      "kind": "subscription",
+      "provider": "azure",
+      "plane": "recovery",
+      "tenant": "prod-tenant",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "vault",
+      "label": "保管先",
+      "kind": "backup",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "key",
+      "label": "復号鍵",
+      "kind": "key",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "logs",
+      "label": "検証ログ",
+      "kind": "log_store",
+      "provider": "azure",
+      "plane": "recovery",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "backup-admin",
+      "label": "バックアップ管理者",
+      "kind": "identity",
+      "provider": "azure",
+      "plane": "backup",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "shared-pipeline",
+      "label": "共通CI/CD",
+      "kind": "pipeline",
+      "provider": "azure",
+      "plane": "shared",
+      "evidence": [
+        "cfg"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-0",
+      "source": "prod-sub",
+      "target": "key",
+      "relation": "can_disable",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-1",
+      "source": "prod-sub",
+      "target": "rec-sub",
+      "relation": "network_reach",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-2",
+      "source": "backup-admin",
+      "target": "vault",
+      "relation": "controls",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-3",
+      "source": "backup-admin",
+      "target": "key",
+      "relation": "can_delete",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-4",
+      "source": "shared-pipeline",
+      "target": "rec-sub",
+      "relation": "controls",
+      "evidence": [
+        "cfg"
+      ]
+    },
+    {
+      "id": "edge-5",
+      "source": "shared-pipeline",
+      "target": "key",
+      "relation": "can_disable",
+      "evidence": [
+        "cfg"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "cfg",
+      "type": "configuration",
+      "collected_at": "2026-10-14",
+      "reference": "仮定: 設計レビュー資料 rev1（実設定の取得ではない）",
+      "note": "デモのためconfigurationとして登録。実設定を取得した証跡ではない。"
+    },
+    {
+      "id": "test",
+      "type": "tested",
+      "collected_at": "2026-10-14",
+      "reference": "仮定: 試験記録の記入例（実機試験は未実施）",
+      "note": "デモスキーマ説明用。実施済み試験として顧客に提示しない。"
+    },
+    {
+      "id": "say",
+      "type": "self_reported",
+      "collected_at": "2026-10-14",
+      "reference": "Synthetic interview"
+    }
+  ],
+  "assessment_scopes": [
+    {
+      "id": "core",
+      "provider": "azure",
+      "workload": "azure_vm"
+    }
+  ]
+}
