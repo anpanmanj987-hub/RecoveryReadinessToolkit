@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+node_modules/
+.DS_Store
+Thumbs.db
+ci-demo/
+demo-output/
+.coverage
+htmlcov/
+build/

@@ -51,11 +51,30 @@ class ServerTests(unittest.TestCase):
         status,_,_=self.request('POST','/api/evaluate',json.dumps({'model':base_model()}),{'Content-Type':'application/json'})
         self.assertEqual(status,403)
 
+    def test_non_ascii_token_returns_forbidden(self):
+        status,body,_=self.request('GET','/api/bootstrap',headers={'X-CRC-Token':'\u00e9'})
+        self.assertEqual(status,403)
+        self.assertIn('error',json.loads(body))
+
+    def test_surrogate_json_key_returns_validation_error(self):
+        for model_json in ['{"\\ud800":true}', '{"\\ud800":true,"\\ud800":false}']:
+            with self.subTest(model_json=model_json):
+                status,body,_=self.post({'model_json':model_json},path='/api/validate')
+                self.assertEqual(status,400)
+                self.assertIn('error',json.loads(body))
+
     def test_cross_origin_blocked_even_with_token(self):
         self.assertEqual(self.post({'model':base_model()},{'Origin':'https://attacker.example'})[0],403)
 
     def test_form_content_type_blocked(self):
         self.assertEqual(self.post({'model':base_model()},{'Content-Type':'text/plain'})[0],415)
+
+    def test_rejected_post_body_does_not_reset_connection_before_error_response(self):
+        headers={'Content-Type':'text/plain','X-CRC-Token':self.token()}
+        for _ in range(10):
+            status,body,_=self.request('POST','/api/evaluate',' '*(64*1024),headers)
+            self.assertEqual(status,415)
+            self.assertIn('error',json.loads(body))
 
     def test_eval_uses_exact_same_core(self):
         from cleanroomcheck.engine import evaluate

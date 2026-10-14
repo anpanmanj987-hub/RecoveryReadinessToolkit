@@ -1,0 +1,18 @@
+{
+  "checks_passed": 11,
+  "checks": [
+    "UI bootstrap and packaged templates",
+    "Risky demo: 35 failed / 36 unknown / 13 passed / 12 not applicable",
+    "HTML export with findings and security policy",
+    "Form edit invalidates previous report and changes evaluation",
+    "Improved design: zero failed with 39 explicitly unresolved checks",
+    "Advanced JSON duplicate-key rejection and dirty-state guard",
+    "Self-reported evidence cannot produce a positive result",
+    "In-flight input changes discard stale evaluation responses",
+    "Standalone report filtering and evidence expansion",
+    "390px mobile layout without page-wide overflow",
+    "No browser JavaScript errors and no external network requests"
+  ],
+  "javascript_errors": [],
+  "external_requests": []
+}

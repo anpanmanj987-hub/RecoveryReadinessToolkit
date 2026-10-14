@@ -29,10 +29,10 @@ try:
         expect(page.locator('.metric.failed .number')).to_have_text('35')
         expect(page.locator('.metric.unknown .number')).to_have_text('36')
         page.locator('#results').scroll_into_view_if_needed();page.wait_for_timeout(300);page.screenshot(path=str(out/'ui-risky.png'))
-        results.append('Risky demo: 36 failed / 36 unknown / 12 passed / 12 not applicable')
+        results.append('Risky demo: 35 failed / 36 unknown / 13 passed / 12 not applicable')
         with page.expect_download() as pending:page.locator('#saveHtml').click()
         pending.value.save_as(str(out/'downloaded-report.html'))
-        text=(out/'downloaded-report.html').read_text()
+        text=(out/'downloaded-report.html').read_text(encoding='utf-8')
         assert 'CRC-ID-001' in text and 'Content-Security-Policy' in text
         results.append('HTML export with findings and security policy')
         page.locator('#fact-dedicated_admin_device').select_option('true')

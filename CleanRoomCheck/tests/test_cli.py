@@ -1,4 +1,5 @@
 import contextlib
+import csv
 import io
 import json
 import tempfile
@@ -35,6 +36,21 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(code,expected,err)
                 for name in ['report.html','report.json','questions.csv','verification.csv']:
                     self.assertTrue((output/name).is_file(),name)
+
+    def test_csv_reports_have_no_extra_blank_rows(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'input.json'; p.write_text(json.dumps(base_model()),encoding='utf-8')
+            output=Path(d)/'review'
+            code,_,err=self.run_cli(['check',str(p),'--out',str(output),'--as-of','2026-10-14'])
+            self.assertEqual(code,0,err)
+            for name in ['questions.csv','verification.csv']:
+                with self.subTest(name=name):
+                    raw=(output/name).read_bytes()
+                    self.assertNotIn(b'\r\r\n',raw)
+                    with (output/name).open(encoding='utf-8-sig',newline='') as stream:
+                        rows=list(csv.reader(stream))
+                    self.assertTrue(rows)
+                    self.assertTrue(all(rows),rows)
 
     def test_input_is_never_overwritten(self):
         with tempfile.TemporaryDirectory() as d:

@@ -47,6 +47,8 @@ def check_budget(data: Any) -> None:
         if isinstance(value, dict):
             if any(not isinstance(k, str) for k in value):
                 raise ModelError('すべてのオブジェクトキーは文字列で指定してください')
+            if any(0xD800 <= ord(c) <= 0xDFFF for key in value for c in key):
+                raise ModelError('単独のUnicodeサロゲートは使用できません')
             stack.extend((v, depth + 1) for v in value.values())
         elif isinstance(value, list):
             stack.extend((v, depth + 1) for v in value)

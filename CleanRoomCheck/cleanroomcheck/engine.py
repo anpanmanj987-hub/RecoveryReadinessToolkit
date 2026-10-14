@@ -182,7 +182,7 @@ def evaluate(model: dict, as_of: date | None = None, max_evidence_age_days: int 
                     'rule_id':rule['id'],'title':rule['title'],'category':rule['category'],
                     'severity':rule['severity'],'phase':rule['phase'],'status':d['status'],
                     'message':d['message'],'assurance':assurance,'facts':proofs,'path_evidence':extra,
-                    'paths':d['paths'],'source_ids':rule['source_ids'],
+                    'paths':d['paths'],'source_ids':list(rule['source_ids']),
                     'remediation':rule['remediation'],'question':rule['question'],
                     'evidence_note':'証跡メタデータの分類を照合。実ファイルの内容・真正性は未検証。'})
     summary={s:sum(f['status']==s for f in findings) for s in STATUS}

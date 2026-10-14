@@ -20,10 +20,10 @@ Metadata changes do not invalidate condition binding; all structural model chang
 
 Japanese UI only in this version. Complex Boolean expressions are editable through JSON rather than a visual nested-gate designer. The map previews 70 nodes and is a structural overview, not a complete rendering of Boolean gate semantics. Use the route inspector or full model for exact AND/OR conditions. Labels are truncated visually in map nodes; full labels are retained in tooltips, tables and exports.
 
-Single-file browser execution is the intended distribution mode. Managed browsers may disallow file URLs, local HTTP, scripts or localStorage. Respect those policies. Test on your intended browsers before deployment. Native file navigation and native localStorage persistence could not be exercised in the build environment; see VERIFICATION.md.
+Single-file browser execution is the intended distribution mode. Managed browsers may disallow file URLs, local HTTP, scripts or localStorage. Respect those policies. Test on your intended browsers before deployment. Native file navigation and native localStorage persistence were subsequently exercised in Windows Chrome; see [the 2026-10-14 review](REVIEW-2026-10-14.md). The original build-environment restriction remains recorded in VERIFICATION.md.
 
 No authentication, multi-user authorization, encrypted persistence, history database, live monitoring, hosted service, integrations, access revocation or credential management. Do not expose the optional server beyond loopback or repurpose it as a shared service.
 
 ## Release status
 
-Early alpha, with automated checks and a documented self-review; no independent reviewer, external penetration test, production drill or GitHub-hosted CI execution in this delivery. The supplied CI matrix targets Linux and Windows with Node 22 and 24; none of those hosted jobs has run in this delivery. Only the local Linux environment was exercised.
+Early alpha, with automated checks and local code review; no external penetration test, production drill or GitHub-hosted CI execution in this project review. The supplied CI matrix targets Linux and Windows with Node 22 and 24. Local Linux/Node 22 was exercised in the original archive; Windows/Node 24 and Chrome were exercised in the 2026-10-14 review. The combined repository records hosted CI separately.

@@ -37,8 +37,22 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff')
             self.send_header('Referrer-Policy','no-referrer');self.send_header('Content-Security-Policy',CSP)
             self.send_header('Connection','close');self.end_headers();self.wfile.write(data)
-        except (BrokenPipeError,ConnectionResetError): pass
+            self._discard_rejected_body()
+        except OSError: pass
         self.close_connection=True
+
+    def _discard_rejected_body(self):
+        # Closing a socket with a pending POST body can reset it on Windows,
+        # discarding the error response. Send the response first, then consume
+        # only a bounded, unambiguous body under the existing socket timeout.
+        if self.command!='POST' or getattr(self,'_body_read',False): return
+        if self.headers.get('Transfer-Encoding') or len(self.headers.get_all('Content-Length',[]))!=1: return
+        try:
+            length=int(self.headers.get('Content-Length',''))
+            if 0<length<=MAX_BYTES:
+                self._body_read=True
+                self.rfile.read(length)
+        except (OSError,ValueError): pass
 
     def _error(self,status,message):
         self._send(status,dump_json({'error':message}))
@@ -55,7 +69,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _token_ok(self):
         token=self.headers.get('X-CRC-Token','')
-        if not secrets.compare_digest(token,self.server.session_token):
+        if not token.isascii() or not secrets.compare_digest(token,self.server.session_token):
             self._error(403,'セッショントークンが一致しません。画面を再読み込みしてください');return False
         return True
 
@@ -90,6 +104,7 @@ class Handler(BaseHTTPRequestHandler):
         if not 0<length<=MAX_BYTES:
             self._error(413,'入力は2MiB以下にしてください');return
         try:
+            self._body_read=True
             raw=self.rfile.read(length)
             if len(raw)!=length: raise ModelError('本文の長さが一致しません')
             payload=parse_json(raw.decode('utf-8'))

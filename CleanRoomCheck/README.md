@@ -127,12 +127,14 @@ Azure例は1業務・3侵害シナリオ・32ルールの **96点検** です。
 - `docs/LIMITATIONS.md`: 判定限界・未実装・既知の運用上の注意
 - `docs/DEMO_REPORT_JA.md`: デモの仮定・指摘・改善案
 - `docs/VERIFICATION.md`: 今回実施した確認と未実施事項
+- `docs/REVIEW-2026-10-14.md`: 公開前レビューで再現・修正した不具合とWindowsでの再検証
 - `docs/PUBLISH.md`: GitHub公開前の手順
 
 ## 開発
 
 ```bash
 python -m unittest discover -v
+node --test tests/ui.test.mjs
 ```
 
 YAMLのテストはPyYAMLがないとスキップされます。任意のブラウザ試験は `tools/browser_smoke.py`、ブラウザの外部ナビゲーションを使わないコンポーネント試験は `tools/browser_component_smoke.py` です。後者はHTTP通し試験の代替認定ではありません。

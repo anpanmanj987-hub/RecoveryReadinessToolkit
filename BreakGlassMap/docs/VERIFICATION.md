@@ -1,5 +1,9 @@
 # Verification record — v0.1.0-alpha.1
 
+This record describes the original 2026-10-13 archive. See the
+[2026-10-14 review](REVIEW-2026-10-14.md) for subsequent fixes and native Windows
+Chrome HTTP/file opening/storage verification.
+
 **Date:** 2026-10-13. **Scope:** local source, standalone bundle, fictional examples and optional local server. This is a test execution record, not an independent audit or a production recovery certification.
 
 ## Environment

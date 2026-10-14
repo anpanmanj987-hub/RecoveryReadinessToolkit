@@ -6,7 +6,7 @@ PAM、復旧用資格情報の取得条件、手順書、保守回線、管理�
 
 **v0.1.0-alpha.1 / MIT / ローカル動作 / LLM不要 / npm追加依存なし**
 
-[English](README.md) · [モデル仕様](docs/MODEL.md) · [検証記録](docs/VERIFICATION.md)
+[English](README.md) · [モデル仕様](docs/MODEL.md) · [検証記録](docs/VERIFICATION.md) · [2026-10-14追加レビュー](docs/REVIEW-2026-10-14.md)
 
 ## 最初に試す
 

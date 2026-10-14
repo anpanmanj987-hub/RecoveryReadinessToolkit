@@ -11,6 +11,8 @@ from .model import MAX_BYTES, MAX_DEPTH, ModelError, check_budget, validate_mode
 def _unique(pairs):
     result={}
     for key,value in pairs:
+        # Validate before including a duplicate key in an error response.
+        check_budget(key)
         if key in result: raise ModelError(f'重複したキー: {key}')
         result[key]=value
     return result

@@ -6,7 +6,7 @@ Find the circular dependencies between identity, privileged access, recovery cre
 
 **Local-first · Single-file browser app · No LLM · No package dependencies · MIT**
 
-[日本語ガイド](README.ja.md) · [Model reference](docs/MODEL.md) · [Security & limits](SECURITY.md) · [Verification](docs/VERIFICATION.md)
+[日本語ガイド](README.ja.md) · [Model reference](docs/MODEL.md) · [Security & limits](SECURITY.md) · [Verification](docs/VERIFICATION.md) · [2026-10-14 review](docs/REVIEW-2026-10-14.md)
 
 ![BreakGlassMap showing blocked recovery goals during a fictional identity outage](docs/screenshots/overview.png)
 
@@ -108,6 +108,11 @@ Build/test/runtime require no third-party npm packages. Optional real-browser ch
 ```sh
 python tests/browser-smoke.py --browser /path/to/chromium
 ```
+
+Focused evidence-preservation regressions optionally use a separately installed
+Node Playwright: `node tests/browser-regressions.mjs --browser /path/to/chromium`.
+The [2026-10-14 review](docs/REVIEW-2026-10-14.md) records native Windows Chrome
+HTTP, file opening, and storage verification, plus reproduced fixes.
 
 See [verification details](docs/VERIFICATION.md) for exactly what ran, including the managed-browser restriction in the build environment. CI configuration is supplied but has not been run on GitHub in this delivery.
 

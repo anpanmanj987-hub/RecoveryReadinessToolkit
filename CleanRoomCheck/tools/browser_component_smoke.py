@@ -20,8 +20,8 @@ root=Path(__file__).resolve().parents[1]
 out=Path(sys.argv[1]) if len(sys.argv)>1 else root/'output/browser-components'
 out.mkdir(parents=True,exist_ok=True)
 bootstrap={'fields':field_catalog(),'rules':RULES,'sources':load_sources(),'examples':{n:example(n) for n in TEMPLATES},'today':'2026-10-14','demo_date':'2026-10-14'}
-html=(root/'cleanroomcheck/web/index.html').read_text().replace('<link rel="stylesheet" href="/assets/common.css">','').replace('<script defer src="/assets/app.js"></script>','')
-css=(root/'cleanroomcheck/web/common.css').read_text();js=(root/'cleanroomcheck/web/app.js').read_text()
+html=(root/'cleanroomcheck/web/index.html').read_text(encoding='utf-8').replace('<link rel="stylesheet" href="/assets/common.css">','').replace('<script defer src="/assets/app.js"></script>','')
+css=(root/'cleanroomcheck/web/common.css').read_text(encoding='utf-8');js=(root/'cleanroomcheck/web/app.js').read_text(encoding='utf-8')
 
 def adapter(source,path,body):
     try:

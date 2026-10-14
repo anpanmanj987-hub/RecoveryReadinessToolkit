@@ -67,7 +67,7 @@ export function validateScenario(value,ids,path='scenario') {
   schemaKeys(value,['id','name','description','unavailable','unknown'],path);
   const result={id:schemaId(value.id,`${path}.id`),name:schemaText(value.name,`${path}.name`),description:schemaText(value.description,`${path}.description`,2000,false)};
   for(const field of ['unavailable','unknown']) {
-    const list=value[field]??[];
+    const list=value[field]===undefined?[]:value[field];
     if(!Array.isArray(list)||list.length>LIMITS.nodes)schemaFail(`${path}.${field}`,'expected a bounded array');
     result[field]=list.map((id,i)=>{schemaId(id,`${path}.${field}[${i}]`);if(!ids.has(id))schemaFail(`${path}.${field}`,`unknown reference ${id}`);return id;});
     if(new Set(result[field]).size!==result[field].length)schemaFail(`${path}.${field}`,'duplicate identifier');
@@ -93,15 +93,15 @@ export function validateModel(input) {
     const p=`nodes[${i}]`;
     schemaKeys(node,['id','label','kind','category','initial','routes','owner','systemId','notes','evidence'],p);
     if(!['resource','action','goal'].includes(node.kind))schemaFail(`${p}.kind`,'expected resource, action or goal');
-    const normalized={id:node.id,label:schemaText(node.label,`${p}.label`,120),kind:node.kind,category:node.category??'other',owner:schemaText(node.owner,`${p}.owner`,160,false),systemId:schemaText(node.systemId,`${p}.systemId`,120,false),notes:schemaText(node.notes,`${p}.notes`,2000,false),evidence:schemaEvidence(node.evidence,`${p}.evidence`)};
+    const normalized={id:node.id,label:schemaText(node.label,`${p}.label`,120),kind:node.kind,category:node.category===undefined?'other':node.category,owner:schemaText(node.owner,`${p}.owner`,160,false),systemId:schemaText(node.systemId,`${p}.systemId`,120,false),notes:schemaText(node.notes,`${p}.notes`,2000,false),evidence:schemaEvidence(node.evidence,`${p}.evidence`)};
     if(!CATEGORIES.includes(normalized.category))schemaFail(`${p}.category`,'unknown category');
     if(node.kind==='resource') {
       if(node.routes!==undefined)schemaFail(p,'resource cannot have routes; model restoration as a separate action');
-      normalized.initial=node.initial??'unknown';
+      normalized.initial=node.initial===undefined?'unknown':node.initial;
       if(!['available','unavailable','unknown'].includes(normalized.initial))schemaFail(`${p}.initial`,'expected available, unavailable or unknown');
     }else {
       if(node.initial!==undefined)schemaFail(p,'derived action/goal cannot have initial state');
-      const routes=node.routes??[];
+      const routes=node.routes===undefined?[]:node.routes;
       if(!Array.isArray(routes)||routes.length>LIMITS.routes)schemaFail(`${p}.routes`,`expected 0–${LIMITS.routes} routes`);
       const routeIds=new Set();
       normalized.routes=routes.map((route,j)=>{
@@ -114,7 +114,7 @@ export function validateModel(input) {
     return normalized;
   });
   if(!result.nodes.some(n=>n.kind==='goal'))schemaFail('model.nodes','at least one goal is required');
-  const scenarios=input.scenarios??[];
+  const scenarios=input.scenarios===undefined?[]:input.scenarios;
   if(!Array.isArray(scenarios)||scenarios.length>LIMITS.scenarios)schemaFail('model.scenarios',`expected 0–${LIMITS.scenarios} scenarios`);
   const scenarioIds=new Set();
   result.scenarios=scenarios.map((s,i)=>{

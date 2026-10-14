@@ -33,7 +33,10 @@ def write_reports(result: dict, output: Path) -> None:
              'questions.csv':questions_csv(result),'verification.csv':verification_csv(result)}
     new_directory(output)
     for name,text in content.items():
-        (output/name).write_text(text,encoding='utf-8-sig' if name.endswith('.csv') else 'utf-8')
+        # csv.writer already emits CRLF. Disable Windows newline translation
+        # so exports do not gain a second carriage return and blank records.
+        is_csv=name.endswith('.csv')
+        (output/name).write_text(text,encoding='utf-8-sig' if is_csv else 'utf-8',newline='' if is_csv else None)
 
 
 def _options(parser):

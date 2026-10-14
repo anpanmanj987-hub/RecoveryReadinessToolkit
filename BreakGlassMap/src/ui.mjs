@@ -121,7 +121,12 @@ function captureNode(){
   else n.routes=n.routes.map((route,i)=>{
     const json=f.get(`route-expr-${i}`);let expr;
     if(json!==null){try{expr=JSON.parse(String(json));}catch{throw new Error(`経路${i+1}の条件式が正しいJSONではありません。`);}}
-    else expr={all:f.getAll(`route-ref-${i}`).map(id=>({ref:String(id)}))};
+    else {
+      const selected=f.getAll(`route-ref-${i}`).map(String),original=new Set(flatRefs(route.requires));
+      // Checkbox order follows the node list, not the stored expression. Keep
+      // unchanged conditions byte-for-byte so metadata edits do not rebind evidence.
+      expr=selected.length===original.size&&selected.every(id=>original.has(id))?route.requires:{all:selected.map(ref=>({ref}))};
+    }
     return {...route,label:String(f.get(`route-label-${i}`)??''),requires:expr};
   });
   n.evidence={status:String(f.get('ev-status')),scope:String(f.get('ev-scope')??''),reviewer:String(f.get('ev-reviewer')??''),reference:String(f.get('ev-reference')??''),maxAgeDays:Number(f.get('ev-age')),notes:String(f.get('ev-notes')??'')};

@@ -1,0 +1,95 @@
+name: Verify recovery toolkit
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  breakglassmap:
+    name: BreakGlassMap (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    defaults:
+      run:
+        working-directory: BreakGlassMap
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ matrix.node }}
+      - run: node scripts/build.mjs
+      - run: node --test
+      - run: node bin/breakglassmap.mjs validate examples/identity-outage.json
+      - run: node bin/breakglassmap.mjs analyze examples/identity-outage.json --scenario identity-outage --fail-on none --format json
+      - run: git diff --exit-code -- dist/BreakGlassMap.html
+
+  cleanroomcheck:
+    name: CleanRoomCheck (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.13']
+    defaults:
+      run:
+        working-directory: CleanRoomCheck
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - run: python -m pip install ".[yaml]"
+      - run: python -m unittest discover -v
+      - run: node --test tests/ui.test.mjs
+      - run: python -m cleanroomcheck demo --out ci-demo
+
+  browser:
+    name: Browser smoke tests (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Find Playwright Chromium
+        run: |
+          python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); print('CHROMIUM_PATH=' + p.chromium.executable_path); p.stop()" >> "$GITHUB_ENV"
+      - run: python -m pip install "./CleanRoomCheck"
+      - run: node scripts/build.mjs
+        working-directory: BreakGlassMap
+      - run: npm install --no-save --package-lock=false playwright
+        working-directory: BreakGlassMap
+      - run: node tests/browser-regressions.mjs --browser "$CHROMIUM_PATH"
+        working-directory: BreakGlassMap
+      - run: python tests/browser-smoke.py --browser "$CHROMIUM_PATH"
+        working-directory: BreakGlassMap
+      - run: python tools/browser_smoke.py output/browser
+        working-directory: CleanRoomCheck
+      - run: python tools/browser_component_smoke.py output/browser-components
+        working-directory: CleanRoomCheck

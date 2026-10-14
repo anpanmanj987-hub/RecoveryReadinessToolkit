@@ -19,7 +19,7 @@ with sync_playwright() as p:
     page.on('pageerror',lambda e: errors.append(str(e)))
     page.on('request',lambda r: network.append(r.url) if r.url.startswith(('http:','https:')) and not r.url.startswith(base) else None)
     injected=False
-    html=(root/'dist/BreakGlassMap.html').read_text()
+    html=(root/'dist/BreakGlassMap.html').read_text(encoding='utf-8')
     def inject(target, saved=None):
         # Test-only storage double for opaque about:blank origins. Never part of app.
         target.evaluate('''values => {
@@ -81,7 +81,7 @@ with sync_playwright() as p:
         page.get_by_role('button',name='JSON保存',exact=True).click()
     with tempfile.TemporaryDirectory() as d:
         saved=pathlib.Path(d)/'model.json';export.value.save_as(saved)
-        assert any(n['id']=='test-condition' for n in json.loads(saved.read_text())['nodes'])
+        assert any(n['id']=='test-condition' for n in json.loads(saved.read_text(encoding='utf-8'))['nodes'])
     # Stored state is explicit and unencrypted. Do not change this without UX approval.
     page.locator('#persist-toggle').check()
     assert page.evaluate('localStorage.length')>0
@@ -161,7 +161,7 @@ with sync_playwright() as p:
         page.get_by_role('button',name='チェックリスト CSV',exact=True).click()
     with tempfile.TemporaryDirectory() as d:
         f=pathlib.Path(d)/'export.csv';csv_export.value.save_as(f)
-        assert "'=1+1" in f.read_text()
+        assert "'=1+1" in f.read_text(encoding='utf-8')
     page.once('dialog',lambda d:d.accept())
     page.get_by_role('button',name='架空デモを開く',exact=True).click()
     assert page.locator('[data-metric="blocked"]').inner_text()=='2'

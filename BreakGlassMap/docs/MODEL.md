@@ -19,6 +19,9 @@
 
 The goal is **unknown**, not ready. Missing `initial` is unknown. Missing/empty `routes` on a derived node is a missing definition (unknown). Missing/empty scenarios creates `baseline`. At least one goal is mandatory.
 
+Defaults apply to omitted fields. Explicit `null` values for initial states,
+categories, routes, scenarios, or scenario override arrays are rejected.
+
 ## Resources vs operations
 
 Resources are independent initial conditions. They cannot have routes. A dependency-bearing capability is an `action`, even if its label sounds like an asset (for example, “access to online runbook”). Goals and actions are derived in exactly the same way. Goals additionally participate in outcome counts and CLI gates.
